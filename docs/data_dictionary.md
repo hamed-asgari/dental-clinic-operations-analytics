@@ -94,7 +94,7 @@ The following variables should be calculated during analysis:
 | chair_start_at | datetime, nullable | Time the patient was seated and clinical care began |
 | chair_end_at | datetime, nullable | Time the clinical visit ended |
 | checkout_at | datetime, nullable | Time the patient completed checkout |
-| cancellation_reason | category, nullable | Patient-related, clinic-related, financial, illness, scheduling conflict, or other |
+| status_change_reason | category, nullable | Reason recorded for a cancelled or rescheduled appointment |
 | rescheduled_from_appointment_id | integer, nullable | Self-referencing identifier of the original appointment when this appointment is a replacement |
 
 ### Derived appointment metrics
