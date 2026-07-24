@@ -1824,19 +1824,500 @@ def generate_treatment_plans(
         treatment_plan_items,
     )
 
-def generate_payments(appointments: pd.DataFrame, procedures: pd.DataFrame) -> pd.DataFrame:
-    merged = procedures.merge(appointments[["appointment_id", "patient_id", "appointment_datetime"]], on="appointment_id", how="left")
-    collection_ratio = RNG.uniform(0.82, 1.0, len(merged))
-    payment_date = pd.to_datetime(merged["appointment_datetime"]).dt.normalize() + pd.to_timedelta(RNG.integers(0, 21, len(merged)), unit="D")
-    return pd.DataFrame({
-        "payment_id": np.arange(1, len(merged) + 1),
-        "patient_id": merged["patient_id"],
-        "appointment_id": merged["appointment_id"],
-        "payment_date": payment_date.dt.date,
-        "amount": np.round(merged["fee_amount"] * collection_ratio, 2),
-        "payment_method": RNG.choice(["card", "cash", "transfer", "installment"], len(merged), p=[0.55, 0.12, 0.18, 0.15]),
-    })
+def generate_payments(
+    appointments: pd.DataFrame,
+    appointment_procedures: pd.DataFrame,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    procedure_finance = appointment_procedures.merge(
+        appointments[
+            [
+                "appointment_id",
+                "patient_id",
+                "scheduled_start_at",
+                "chair_end_at",
+            ]
+        ],
+        on="appointment_id",
+        how="left",
+        validate="many_to_one",
+    ).copy()
 
+    procedure_finance["net_procedure_amount"] = (
+        procedure_finance["fee_amount"]
+        - procedure_finance["discount_amount"]
+    ).round(2)
+
+    payment_rows: list[dict[str, object]] = []
+    allocation_rows: list[dict[str, object]] = []
+
+    payment_id = 1
+    allocation_id = 1
+
+    for _, group in procedure_finance.groupby(
+        "appointment_id",
+        sort=True,
+    ):
+        patient_id = int(
+            group["patient_id"].iloc[0]
+        )
+
+        scheduled_start_at = pd.Timestamp(
+            group["scheduled_start_at"].iloc[0]
+        )
+
+        chair_end_at = pd.Timestamp(
+            group["chair_end_at"].iloc[0]
+        )
+
+        balances = {
+            int(row.appointment_procedure_id): float(
+                row.net_procedure_amount
+            )
+            for row in group.itertuples(
+                index=False
+            )
+        }
+
+        total_due = float(
+            np.round(
+                sum(balances.values()),
+                2,
+            )
+        )
+
+        arrangement = str(
+            RNG.choice(
+                [
+                    "full_payment",
+                    "partial_payment",
+                    "installment",
+                ],
+                p=[0.58, 0.24, 0.18],
+            )
+        )
+
+        if arrangement == "full_payment":
+            collection_ratio = float(
+                RNG.uniform(0.98, 1.00)
+            )
+            transaction_count = 1
+
+        elif arrangement == "partial_payment":
+            collection_ratio = float(
+                RNG.uniform(0.55, 0.90)
+            )
+            transaction_count = 1
+
+        else:
+            collection_ratio = float(
+                RNG.uniform(0.82, 1.00)
+            )
+            transaction_count = int(
+                RNG.choice(
+                    [2, 3],
+                    p=[0.72, 0.28],
+                )
+            )
+
+        collected_target = float(
+            np.round(
+                total_due * collection_ratio,
+                2,
+            )
+        )
+
+        if transaction_count == 1:
+            transaction_amounts = [
+                collected_target
+            ]
+
+        else:
+            split_weights = RNG.dirichlet(
+                np.ones(transaction_count)
+            )
+
+            transaction_amounts = list(
+                np.round(
+                    collected_target
+                    * split_weights,
+                    2,
+                )
+            )
+
+            rounding_difference = float(
+                np.round(
+                    collected_target
+                    - sum(transaction_amounts),
+                    2,
+                )
+            )
+
+            transaction_amounts[-1] = float(
+                np.round(
+                    transaction_amounts[-1]
+                    + rounding_difference,
+                    2,
+                )
+            )
+
+        for transaction_number, amount in enumerate(
+            transaction_amounts,
+            start=1,
+        ):
+            if amount <= 0:
+                continue
+
+            is_deposit = (
+                transaction_number == 1
+                and arrangement == "installment"
+                and RNG.random() < 0.40
+            )
+
+            transaction_type = (
+                "deposit"
+                if is_deposit
+                else "payment"
+            )
+
+            if is_deposit:
+                received_at = (
+                    scheduled_start_at
+                    - pd.to_timedelta(
+                        int(
+                            RNG.integers(
+                                1,
+                                15,
+                            )
+                        ),
+                        unit="D",
+                    )
+                    + pd.to_timedelta(
+                        int(
+                            RNG.integers(
+                                -120,
+                                121,
+                            )
+                        ),
+                        unit="m",
+                    )
+                )
+
+            else:
+                minimum_days = (
+                    0
+                    if transaction_number == 1
+                    else 7
+                    * (transaction_number - 1)
+                )
+
+                maximum_days = (
+                    7
+                    if transaction_number == 1
+                    else minimum_days + 21
+                )
+
+                received_at = (
+                    chair_end_at
+                    + pd.to_timedelta(
+                        int(
+                            RNG.integers(
+                                minimum_days,
+                                maximum_days + 1,
+                            )
+                        ),
+                        unit="D",
+                    )
+                    + pd.to_timedelta(
+                        int(
+                            RNG.integers(
+                                5,
+                                241,
+                            )
+                        ),
+                        unit="m",
+                    )
+                )
+
+            payment_rows.append(
+                {
+                    "payment_id": payment_id,
+                    "patient_id": patient_id,
+                    "received_at": received_at,
+                    "transaction_type": (
+                        transaction_type
+                    ),
+                    "payment_arrangement": (
+                        arrangement
+                    ),
+                    "payment_method": str(
+                        RNG.choice(
+                            [
+                                "cash",
+                                "card",
+                                "bank_transfer",
+                                "online_payment",
+                                "other",
+                            ],
+                            p=[
+                                0.10,
+                                0.55,
+                                0.20,
+                                0.12,
+                                0.03,
+                            ],
+                        )
+                    ),
+                    "amount": float(
+                        np.round(
+                            amount,
+                            2,
+                        )
+                    ),
+                    "payment_status": "completed",
+                    "reference_code": (
+                        f"PAY{payment_id:07d}"
+                    ),
+                    "notes": pd.NA,
+                }
+            )
+
+            allocatable_amount = float(
+                np.round(
+                    amount,
+                    2,
+                )
+            )
+
+            if (
+                transaction_type == "deposit"
+                and RNG.random() < 0.35
+            ):
+                allocatable_amount = float(
+                    np.round(
+                        allocatable_amount
+                        * RNG.uniform(
+                            0.60,
+                            0.90,
+                        ),
+                        2,
+                    )
+                )
+
+            for procedure_id in balances:
+                if allocatable_amount <= 0:
+                    break
+
+                outstanding = balances[
+                    procedure_id
+                ]
+
+                if outstanding <= 0:
+                    continue
+
+                allocated_amount = float(
+                    np.round(
+                        min(
+                            outstanding,
+                            allocatable_amount,
+                        ),
+                        2,
+                    )
+                )
+
+                if allocated_amount <= 0:
+                    continue
+
+                allocation_rows.append(
+                    {
+                        "allocation_id": (
+                            allocation_id
+                        ),
+                        "payment_id": payment_id,
+                        "appointment_procedure_id": (
+                            procedure_id
+                        ),
+                        "allocated_amount": (
+                            allocated_amount
+                        ),
+                    }
+                )
+
+                balances[procedure_id] = float(
+                    np.round(
+                        outstanding
+                        - allocated_amount,
+                        2,
+                    )
+                )
+
+                allocatable_amount = float(
+                    np.round(
+                        allocatable_amount
+                        - allocated_amount,
+                        2,
+                    )
+                )
+
+                allocation_id += 1
+
+            payment_id += 1
+
+        if RNG.random() < 0.08:
+            attempted_amount = float(
+                np.round(
+                    total_due
+                    * RNG.uniform(
+                        0.20,
+                        0.70,
+                    ),
+                    2,
+                )
+            )
+
+            payment_rows.append(
+                {
+                    "payment_id": payment_id,
+                    "patient_id": patient_id,
+                    "received_at": (
+                        chair_end_at
+                        + pd.to_timedelta(
+                            int(
+                                RNG.integers(
+                                    0,
+                                    15,
+                                )
+                            ),
+                            unit="D",
+                        )
+                    ),
+                    "transaction_type": "payment",
+                    "payment_arrangement": (
+                        arrangement
+                    ),
+                    "payment_method": str(
+                        RNG.choice(
+                            [
+                                "card",
+                                "bank_transfer",
+                                "online_payment",
+                            ]
+                        )
+                    ),
+                    "amount": attempted_amount,
+                    "payment_status": str(
+                        RNG.choice(
+                            [
+                                "pending",
+                                "failed",
+                                "cancelled",
+                                "reversed",
+                            ],
+                            p=[
+                                0.25,
+                                0.45,
+                                0.20,
+                                0.10,
+                            ],
+                        )
+                    ),
+                    "reference_code": (
+                        f"PAY{payment_id:07d}"
+                    ),
+                    "notes": pd.NA,
+                }
+            )
+
+            payment_id += 1
+
+        if RNG.random() < 0.03:
+            refund_amount = float(
+                np.round(
+                    min(
+                        collected_target,
+                        total_due
+                        * RNG.uniform(
+                            0.05,
+                            0.20,
+                        ),
+                    ),
+                    2,
+                )
+            )
+
+            if refund_amount > 0:
+                payment_rows.append(
+                    {
+                        "payment_id": payment_id,
+                        "patient_id": patient_id,
+                        "received_at": (
+                            chair_end_at
+                            + pd.to_timedelta(
+                                int(
+                                    RNG.integers(
+                                        7,
+                                        46,
+                                    )
+                                ),
+                                unit="D",
+                            )
+                        ),
+                        "transaction_type": (
+                            "refund"
+                        ),
+                        "payment_arrangement": (
+                            "not_applicable"
+                        ),
+                        "payment_method": str(
+                            RNG.choice(
+                                [
+                                    "card",
+                                    "bank_transfer",
+                                    "online_payment",
+                                ]
+                            )
+                        ),
+                        "amount": refund_amount,
+                        "payment_status": (
+                            "completed"
+                        ),
+                        "reference_code": (
+                            f"PAY{payment_id:07d}"
+                        ),
+                        "notes": (
+                            "Synthetic refund"
+                        ),
+                    }
+                )
+
+                payment_id += 1
+
+    payments = pd.DataFrame(
+        payment_rows,
+        columns=[
+            "payment_id",
+            "patient_id",
+            "received_at",
+            "transaction_type",
+            "payment_arrangement",
+            "payment_method",
+            "amount",
+            "payment_status",
+            "reference_code",
+            "notes",
+        ],
+    )
+
+    payment_allocations = pd.DataFrame(
+        allocation_rows,
+        columns=[
+            "allocation_id",
+            "payment_id",
+            "appointment_procedure_id",
+            "allocated_amount",
+        ],
+    )
+
+    return payments, payment_allocations
 
 def validate(patients, dentists, appointments, procedures, plans, payments) -> None:
     assert appointments["patient_id"].isin(patients["patient_id"]).all()
