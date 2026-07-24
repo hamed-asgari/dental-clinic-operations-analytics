@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+*.pyc
+*.pyo
+.env
+.DS_Store
+Thumbs.db
+# Uncomment if generated data becomes too large
+# data/raw/*.csv
+.idea/

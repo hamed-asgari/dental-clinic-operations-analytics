@@ -1,0 +1,4 @@
+dentist_id,dentist_role,start_date,scheduled_hours_weekly
+1,general_dentist,2023-01-01,18
+2,general_dentist,2023-04-01,24
+3,visiting_specialist,2023-07-01,8
