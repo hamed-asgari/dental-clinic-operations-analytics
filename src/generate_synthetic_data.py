@@ -25,9 +25,9 @@ def generate_patients(n: int) -> pd.DataFrame:
     registration_minutes = RNG.integers(8 * 60, 20 * 60, n)
 
     registered_at = (
-        pd.Timestamp("2023-01-01")
-        + pd.to_timedelta(registration_days, unit="D")
-        + pd.to_timedelta(registration_minutes, unit="m")
+            pd.Timestamp("2023-01-01")
+            + pd.to_timedelta(registration_days, unit="D")
+            + pd.to_timedelta(registration_minutes, unit="m")
     )
 
     return pd.DataFrame(
@@ -175,9 +175,9 @@ def generate_dentists() -> pd.DataFrame:
 
 
 def generate_appointments(
-    n: int,
-    patients: pd.DataFrame,
-    dentists: pd.DataFrame,
+        n: int,
+        patients: pd.DataFrame,
+        dentists: pd.DataFrame,
 ) -> pd.DataFrame:
     # The synthetic clinic operates six days per week and is closed on Fridays.
     clinic_dates = pd.date_range(
@@ -213,9 +213,9 @@ def generate_appointments(
     appointment_minutes = RNG.choice([0, 30], n)
 
     scheduled_start_at = (
-        appointment_days
-        + pd.to_timedelta(appointment_hours, unit="h")
-        + pd.to_timedelta(appointment_minutes, unit="m")
+            appointment_days
+            + pd.to_timedelta(appointment_hours, unit="h")
+            + pd.to_timedelta(appointment_minutes, unit="m")
     )
 
     lead_days = RNG.integers(1, 61, n)
@@ -226,11 +226,11 @@ def generate_appointments(
     )
 
     booked_at = (
-        (
-            scheduled_start_at
-            - pd.to_timedelta(lead_days, unit="D")
-        ).normalize()
-        + pd.to_timedelta(booking_minutes, unit="m")
+            (
+                    scheduled_start_at
+                    - pd.to_timedelta(lead_days, unit="D")
+            ).normalize()
+            + pd.to_timedelta(booking_minutes, unit="m")
     )
 
     patient_id = RNG.choice(
@@ -253,11 +253,11 @@ def generate_appointments(
 
     for appointment_time in scheduled_start_at:
         eligible = (
-            (dentist_start <= appointment_time)
-            & (
-                dentist_end.isna()
-                | (dentist_end >= appointment_time)
-            )
+                (dentist_start <= appointment_time)
+                & (
+                        dentist_end.isna()
+                        | (dentist_end >= appointment_time)
+                )
         )
 
         eligible_ids = dentists.loc[
@@ -269,8 +269,8 @@ def generate_appointments(
             eligible.to_numpy()
         ]
         eligible_weights = (
-            eligible_weights
-            / eligible_weights.sum()
+                eligible_weights
+                / eligible_weights.sum()
         )
 
         dentist_id.append(
@@ -345,29 +345,29 @@ def generate_appointments(
 
     # These probabilities are synthetic assumptions.
     base_no_show = (
-        0.07
-        + (~reminder_sent) * 0.09
-        + (lead_days > 30) * 0.04
+            0.07
+            + (~reminder_sent) * 0.09
+            + (lead_days > 30) * 0.04
     )
 
     no_show = (
-        RNG.random(n)
-        < np.clip(
-            base_no_show,
-            0.0,
-            0.30,
-        )
+            RNG.random(n)
+            < np.clip(
+        base_no_show,
+        0.0,
+        0.30,
+    )
     )
 
     cancelled = (
-        (~no_show)
-        & (RNG.random(n) < 0.11)
+            (~no_show)
+            & (RNG.random(n) < 0.11)
     )
 
     rescheduled = (
-        (~no_show)
-        & (~cancelled)
-        & (RNG.random(n) < 0.06)
+            (~no_show)
+            & (~cancelled)
+            & (RNG.random(n) < 0.06)
     )
 
     status = np.where(
@@ -436,24 +436,24 @@ def generate_appointments(
     ).reset_index(drop=True)
 
     completed_check_in = (
-        completed_schedule
-        + pd.to_timedelta(
-            arrival_offset_min,
-            unit="m",
-        )
+            completed_schedule
+            + pd.to_timedelta(
+        arrival_offset_min,
+        unit="m",
+    )
     )
 
     start_candidate = (
-        completed_check_in
-        + pd.to_timedelta(
-            waiting_min,
-            unit="m",
-        )
+            completed_check_in
+            + pd.to_timedelta(
+        waiting_min,
+        unit="m",
+    )
     )
 
     earliest_start = (
-        completed_schedule
-        - pd.Timedelta(minutes=10)
+            completed_schedule
+            - pd.Timedelta(minutes=10)
     )
 
     completed_chair_start = (
@@ -483,23 +483,23 @@ def generate_appointments(
     )
 
     completed_chair_end = (
-        completed_chair_start
-        + pd.to_timedelta(
-            actual_duration_min,
-            unit="m",
-        )
+            completed_chair_start
+            + pd.to_timedelta(
+        actual_duration_min,
+        unit="m",
+    )
     )
 
     completed_checkout = (
-        completed_chair_end
-        + pd.to_timedelta(
-            RNG.integers(
-                5,
-                21,
-                completed_count,
-            ),
-            unit="m",
-        )
+            completed_chair_end
+            + pd.to_timedelta(
+        RNG.integers(
+            5,
+            21,
+            completed_count,
+        ),
+        unit="m",
+    )
     )
 
     completed_indices = np.flatnonzero(
@@ -533,8 +533,8 @@ def generate_appointments(
     status_updated_at.iloc[
         no_show_indices
     ] = (
-        scheduled_start_at[no_show]
-        + pd.Timedelta(minutes=15)
+            scheduled_start_at[no_show]
+            + pd.Timedelta(minutes=15)
     ).to_numpy()
 
     changed_mask = cancelled | rescheduled
@@ -557,16 +557,16 @@ def generate_appointments(
     ).reset_index(drop=True)
 
     changed_at = (
-        changed_schedule
-        - pd.to_timedelta(
-            notice_hours,
-            unit="h",
-        )
+            changed_schedule
+            - pd.to_timedelta(
+        notice_hours,
+        unit="h",
+    )
     )
 
     earliest_change = (
-        changed_booked
-        + pd.Timedelta(minutes=15)
+            changed_booked
+            + pd.Timedelta(minutes=15)
     )
 
     changed_at = changed_at.where(
@@ -656,31 +656,31 @@ def generate_appointments(
     rescheduled_indices = appointments.index[
         appointments["status"]
         == "rescheduled"
-    ].to_numpy()
+        ].to_numpy()
 
     used_replacements: set[int] = set()
 
     for original_index in rescheduled_indices:
         future_candidates = appointments.index[
             (
-                appointments.index
-                > original_index
+                    appointments.index
+                    > original_index
             )
             & (
-                appointments["status"]
-                == "completed"
+                    appointments["status"]
+                    == "completed"
             )
             & (
-                appointments[
-                    "scheduled_start_at"
-                ]
-                > appointments.at[
-                    original_index,
-                    "scheduled_start_at",
-                ]
-                + pd.Timedelta(days=1)
+                    appointments[
+                        "scheduled_start_at"
+                    ]
+                    > appointments.at[
+                        original_index,
+                        "scheduled_start_at",
+                    ]
+                    + pd.Timedelta(days=1)
             )
-        ].difference(
+            ].difference(
             list(used_replacements)
         )
 
@@ -722,6 +722,7 @@ def generate_appointments(
         ]
 
     return appointments
+
 
 def generate_procedure_catalog() -> pd.DataFrame:
     records = [
@@ -958,14 +959,15 @@ def generate_procedure_catalog() -> pd.DataFrame:
         columns=columns,
     )
 
+
 def generate_appointment_procedures(
-    appointments: pd.DataFrame,
-    dentists: pd.DataFrame,
-    procedure_catalog: pd.DataFrame,
+        appointments: pd.DataFrame,
+        dentists: pd.DataFrame,
+        procedure_catalog: pd.DataFrame,
 ) -> pd.DataFrame:
     completed_appointments = appointments.loc[
         appointments["status"] == "completed"
-    ].copy()
+        ].copy()
 
     dentist_role_by_id = dentists.set_index(
         "dentist_id"
@@ -1077,7 +1079,7 @@ def generate_appointment_procedures(
     appointment_procedure_id = 1
 
     for appointment in completed_appointments.itertuples(
-        index=False
+            index=False
     ):
         dentist_role = dentist_role_by_id[
             int(appointment.dentist_id)
@@ -1132,8 +1134,8 @@ def generate_appointment_procedures(
             )
 
             if (
-                emergency_candidates
-                and RNG.random() < 0.60
+                    emergency_candidates
+                    and RNG.random() < 0.60
             ):
                 selected_codes.append(
                     str(
@@ -1169,10 +1171,10 @@ def generate_appointment_procedures(
                 [
                     str(code)
                     for code in RNG.choice(
-                        treatment_candidates,
-                        size=procedure_count,
-                        replace=False,
-                    )
+                    treatment_candidates,
+                    size=procedure_count,
+                    replace=False,
+                )
                 ]
             )
 
@@ -1318,10 +1320,11 @@ def generate_appointment_procedures(
 
     return appointment_procedures
 
+
 def generate_treatment_plans(
-    appointments: pd.DataFrame,
-    dentists: pd.DataFrame,
-    procedure_catalog: pd.DataFrame,
+        appointments: pd.DataFrame,
+        dentists: pd.DataFrame,
+        procedure_catalog: pd.DataFrame,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     eligible_sources = appointments.loc[
         appointments["status"].eq("completed")
@@ -1333,11 +1336,11 @@ def generate_treatment_plans(
                 "emergency",
             ]
         )
-    ].copy()
+        ].copy()
 
     selected_mask = (
-        RNG.random(len(eligible_sources))
-        < 0.58
+            RNG.random(len(eligible_sources))
+            < 0.58
     )
 
     selected_sources = eligible_sources.loc[
@@ -1417,7 +1420,7 @@ def generate_treatment_plans(
     plan_item_id = 1
 
     for source in selected_sources.itertuples(
-        index=False
+            index=False
     ):
         dentist_id = int(source.dentist_id)
         dentist_role = dentist_role_by_id[
@@ -1475,29 +1478,29 @@ def generate_treatment_plans(
         ]
 
         proposed_at = (
-            pd.Timestamp(source.chair_end_at)
-            + pd.to_timedelta(
-                int(
-                    RNG.integers(
-                        5,
-                        46,
-                    )
-                ),
-                unit="m",
-            )
+                pd.Timestamp(source.chair_end_at)
+                + pd.to_timedelta(
+            int(
+                RNG.integers(
+                    5,
+                    46,
+                )
+            ),
+            unit="m",
+        )
         )
 
         valid_until = (
-            proposed_at.normalize()
-            + pd.to_timedelta(
-                int(
-                    RNG.integers(
-                        30,
-                        91,
-                    )
-                ),
-                unit="D",
-            )
+                proposed_at.normalize()
+                + pd.to_timedelta(
+            int(
+                RNG.integers(
+                    30,
+                    91,
+                )
+            ),
+            unit="D",
+        )
         )
 
         plan_status = str(
@@ -1520,9 +1523,9 @@ def generate_treatment_plans(
         )
 
         if (
-            plan_status
-            == "partially_accepted"
-            and item_count == 1
+                plan_status
+                == "partially_accepted"
+                and item_count == 1
         ):
             plan_status = str(
                 RNG.choice(
@@ -1556,21 +1559,21 @@ def generate_treatment_plans(
 
         if plan_status == "fully_accepted":
             decisions = [
-                "accepted"
-            ] * item_count
+                            "accepted"
+                        ] * item_count
 
         elif plan_status == "declined":
             decisions = [
-                "declined"
-            ] * item_count
+                            "declined"
+                        ] * item_count
 
         elif plan_status in {
             "presented",
             "expired",
         }:
             decisions = [
-                "pending"
-            ] * item_count
+                            "pending"
+                        ] * item_count
 
         else:
             accepted_count = int(
@@ -1581,29 +1584,29 @@ def generate_treatment_plans(
             )
 
             decisions = (
-                ["accepted"] * accepted_count
-                + [
-                    str(
-                        RNG.choice(
-                            [
-                                "declined",
-                                "deferred",
-                            ],
-                            p=[0.65, 0.35],
+                    ["accepted"] * accepted_count
+                    + [
+                        str(
+                            RNG.choice(
+                                [
+                                    "declined",
+                                    "deferred",
+                                ],
+                                p=[0.65, 0.35],
+                            )
                         )
-                    )
-                    for _ in range(
-                        item_count
-                        - accepted_count
-                    )
-                ]
+                        for _ in range(
+                    item_count
+                    - accepted_count
+                )
+                    ]
             )
 
             RNG.shuffle(decisions)
 
         for sequence_order, (
-            procedure_code,
-            decision_status,
+                procedure_code,
+                decision_status,
         ) in enumerate(
             zip(
                 selected_codes,
@@ -1713,8 +1716,8 @@ def generate_treatment_plans(
             )
 
             if (
-                procedure_code
-                in tooth_specific_codes
+                    procedure_code
+                    in tooth_specific_codes
             ):
                 tooth_code: object = str(
                     RNG.choice(
@@ -1730,10 +1733,10 @@ def generate_treatment_plans(
                 maximum_decision_days = max(
                     1,
                     (
-                        pd.Timestamp(
-                            valid_until
-                        )
-                        - proposed_at.normalize()
+                            pd.Timestamp(
+                                valid_until
+                            )
+                            - proposed_at.normalize()
                     ).days,
                 )
 
@@ -1756,23 +1759,23 @@ def generate_treatment_plans(
                 )
 
                 decision_at = (
-                    proposed_at.normalize()
-                    + pd.to_timedelta(
-                        decision_days,
-                        unit="D",
-                    )
-                    + pd.to_timedelta(
-                        decision_minutes,
-                        unit="m",
-                    )
+                        proposed_at.normalize()
+                        + pd.to_timedelta(
+                    decision_days,
+                    unit="D",
+                )
+                        + pd.to_timedelta(
+                    decision_minutes,
+                    unit="m",
+                )
                 )
 
                 if decision_at < proposed_at:
                     decision_at = (
-                        proposed_at
-                        + pd.Timedelta(
-                            minutes=30
-                        )
+                            proposed_at
+                            + pd.Timedelta(
+                        minutes=30
+                    )
                     )
 
             item_rows.append(
@@ -1824,9 +1827,153 @@ def generate_treatment_plans(
         treatment_plan_items,
     )
 
-def generate_payments(
+def link_accepted_plan_items_to_procedures(
     appointments: pd.DataFrame,
     appointment_procedures: pd.DataFrame,
+    treatment_plans: pd.DataFrame,
+    treatment_plan_items: pd.DataFrame,
+) -> pd.DataFrame:
+    linked_procedures = (
+        appointment_procedures.copy()
+    )
+
+    procedure_context = linked_procedures.merge(
+        appointments[
+            [
+                "appointment_id",
+                "patient_id",
+                "scheduled_start_at",
+            ]
+        ],
+        on="appointment_id",
+        how="left",
+        validate="many_to_one",
+    )
+
+    accepted_items = (
+        treatment_plan_items.loc[
+            treatment_plan_items[
+                "decision_status"
+            ].eq("accepted")
+        ]
+        .merge(
+            treatment_plans[
+                [
+                    "plan_id",
+                    "patient_id",
+                ]
+            ],
+            on="plan_id",
+            how="left",
+            validate="many_to_one",
+        )
+        .sort_values(
+            [
+                "decision_at",
+                "plan_item_id",
+            ]
+        )
+    )
+
+    used_procedure_ids = set(
+        linked_procedures.loc[
+            linked_procedures[
+                "plan_item_id"
+            ].notna(),
+            "appointment_procedure_id",
+        ].astype(int)
+    )
+
+    for item in accepted_items.itertuples(
+        index=False
+    ):
+        decision_at = pd.Timestamp(
+            item.decision_at
+        )
+
+        candidates = procedure_context.loc[
+            procedure_context[
+                "patient_id"
+            ].eq(int(item.patient_id))
+            & procedure_context[
+                "procedure_code"
+            ].eq(item.procedure_code)
+            & procedure_context[
+                "completion_status"
+            ].eq("completed")
+            & procedure_context[
+                "scheduled_start_at"
+            ].gt(decision_at)
+            & ~procedure_context[
+                "appointment_procedure_id"
+            ].isin(used_procedure_ids)
+        ].sort_values(
+            "scheduled_start_at"
+        )
+
+        if candidates.empty:
+            continue
+
+        planned_tooth_code = (
+            item.tooth_code
+        )
+
+        if pd.notna(planned_tooth_code):
+            exact_tooth_candidates = (
+                candidates.loc[
+                    candidates[
+                        "tooth_code"
+                    ].eq(
+                        str(
+                            planned_tooth_code
+                        )
+                    )
+                ]
+            )
+
+            if not exact_tooth_candidates.empty:
+                candidates = (
+                    exact_tooth_candidates
+                )
+
+        selected = candidates.iloc[0]
+
+        selected_procedure_id = int(
+            selected[
+                "appointment_procedure_id"
+            ]
+        )
+
+        selected_mask = linked_procedures[
+            "appointment_procedure_id"
+        ].eq(selected_procedure_id)
+
+        linked_procedures.loc[
+            selected_mask,
+            "plan_item_id",
+        ] = int(item.plan_item_id)
+
+        if pd.notna(planned_tooth_code):
+            linked_procedures.loc[
+                selected_mask,
+                "tooth_code",
+            ] = str(planned_tooth_code)
+
+        used_procedure_ids.add(
+            selected_procedure_id
+        )
+
+    linked_procedures[
+        "plan_item_id"
+    ] = linked_procedures[
+        "plan_item_id"
+    ].astype("Int64")
+
+    return linked_procedures
+
+def generate_payments(
+        appointments: pd.DataFrame,
+        appointment_procedures: pd.DataFrame,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     procedure_finance = appointment_procedures.merge(
         appointments[
@@ -1843,8 +1990,8 @@ def generate_payments(
     ).copy()
 
     procedure_finance["net_procedure_amount"] = (
-        procedure_finance["fee_amount"]
-        - procedure_finance["discount_amount"]
+            procedure_finance["fee_amount"]
+            - procedure_finance["discount_amount"]
     ).round(2)
 
     payment_rows: list[dict[str, object]] = []
@@ -1854,8 +2001,8 @@ def generate_payments(
     allocation_id = 1
 
     for _, group in procedure_finance.groupby(
-        "appointment_id",
-        sort=True,
+            "appointment_id",
+            sort=True,
     ):
         patient_id = int(
             group["patient_id"].iloc[0]
@@ -1961,16 +2108,16 @@ def generate_payments(
             )
 
         for transaction_number, amount in enumerate(
-            transaction_amounts,
-            start=1,
+                transaction_amounts,
+                start=1,
         ):
             if amount <= 0:
                 continue
 
             is_deposit = (
-                transaction_number == 1
-                and arrangement == "installment"
-                and RNG.random() < 0.40
+                    transaction_number == 1
+                    and arrangement == "installment"
+                    and RNG.random() < 0.40
             )
 
             transaction_type = (
@@ -1981,25 +2128,25 @@ def generate_payments(
 
             if is_deposit:
                 received_at = (
-                    scheduled_start_at
-                    - pd.to_timedelta(
-                        int(
-                            RNG.integers(
-                                1,
-                                15,
-                            )
-                        ),
-                        unit="D",
-                    )
-                    + pd.to_timedelta(
-                        int(
-                            RNG.integers(
-                                -120,
-                                121,
-                            )
-                        ),
-                        unit="m",
-                    )
+                        scheduled_start_at
+                        - pd.to_timedelta(
+                    int(
+                        RNG.integers(
+                            1,
+                            15,
+                        )
+                    ),
+                    unit="D",
+                )
+                        + pd.to_timedelta(
+                    int(
+                        RNG.integers(
+                            -120,
+                            121,
+                        )
+                    ),
+                    unit="m",
+                )
                 )
 
             else:
@@ -2007,7 +2154,7 @@ def generate_payments(
                     0
                     if transaction_number == 1
                     else 7
-                    * (transaction_number - 1)
+                         * (transaction_number - 1)
                 )
 
                 maximum_days = (
@@ -2017,25 +2164,25 @@ def generate_payments(
                 )
 
                 received_at = (
-                    chair_end_at
-                    + pd.to_timedelta(
-                        int(
-                            RNG.integers(
-                                minimum_days,
-                                maximum_days + 1,
-                            )
-                        ),
-                        unit="D",
-                    )
-                    + pd.to_timedelta(
-                        int(
-                            RNG.integers(
-                                5,
-                                241,
-                            )
-                        ),
-                        unit="m",
-                    )
+                        chair_end_at
+                        + pd.to_timedelta(
+                    int(
+                        RNG.integers(
+                            minimum_days,
+                            maximum_days + 1,
+                        )
+                    ),
+                    unit="D",
+                )
+                        + pd.to_timedelta(
+                    int(
+                        RNG.integers(
+                            5,
+                            241,
+                        )
+                    ),
+                    unit="m",
+                )
                 )
 
             payment_rows.append(
@@ -2089,8 +2236,8 @@ def generate_payments(
             )
 
             if (
-                transaction_type == "deposit"
-                and RNG.random() < 0.35
+                    transaction_type == "deposit"
+                    and RNG.random() < 0.35
             ):
                 allocatable_amount = float(
                     np.round(
@@ -2179,16 +2326,16 @@ def generate_payments(
                     "payment_id": payment_id,
                     "patient_id": patient_id,
                     "received_at": (
-                        chair_end_at
-                        + pd.to_timedelta(
-                            int(
-                                RNG.integers(
-                                    0,
-                                    15,
-                                )
-                            ),
-                            unit="D",
-                        )
+                            chair_end_at
+                            + pd.to_timedelta(
+                        int(
+                            RNG.integers(
+                                0,
+                                15,
+                            )
+                        ),
+                        unit="D",
+                    )
                     ),
                     "transaction_type": "payment",
                     "payment_arrangement": (
@@ -2250,16 +2397,16 @@ def generate_payments(
                         "payment_id": payment_id,
                         "patient_id": patient_id,
                         "received_at": (
-                            chair_end_at
-                            + pd.to_timedelta(
-                                int(
-                                    RNG.integers(
-                                        7,
-                                        46,
-                                    )
-                                ),
-                                unit="D",
-                            )
+                                chair_end_at
+                                + pd.to_timedelta(
+                            int(
+                                RNG.integers(
+                                    7,
+                                    46,
+                                )
+                            ),
+                            unit="D",
+                        )
                         ),
                         "transaction_type": (
                             "refund"
@@ -2319,40 +2466,399 @@ def generate_payments(
 
     return payments, payment_allocations
 
-def validate(patients, dentists, appointments, procedures, plans, payments) -> None:
-    assert appointments["patient_id"].isin(patients["patient_id"]).all()
-    assert appointments["dentist_id"].isin(dentists["dentist_id"]).all()
-    assert procedures["appointment_id"].isin(appointments["appointment_id"]).all()
-    assert plans["patient_id"].isin(patients["patient_id"]).all()
-    assert payments["appointment_id"].isin(appointments["appointment_id"]).all()
+
+def validate(
+        patients: pd.DataFrame,
+        dentists: pd.DataFrame,
+        appointments: pd.DataFrame,
+        procedure_catalog: pd.DataFrame,
+        appointment_procedures: pd.DataFrame,
+        treatment_plans: pd.DataFrame,
+        treatment_plan_items: pd.DataFrame,
+        payments: pd.DataFrame,
+        payment_allocations: pd.DataFrame,
+) -> None:
+    assert patients["patient_id"].is_unique
+    assert dentists["dentist_id"].is_unique
+    assert appointments["appointment_id"].is_unique
+    assert procedure_catalog["procedure_code"].is_unique
+
+    assert appointment_procedures[
+        "appointment_procedure_id"
+    ].is_unique
+
+    assert treatment_plans["plan_id"].is_unique
+    assert treatment_plan_items["plan_item_id"].is_unique
+    assert payments["payment_id"].is_unique
+    assert payment_allocations["allocation_id"].is_unique
+
+    assert appointments["patient_id"].isin(
+        patients["patient_id"]
+    ).all()
+
+    assert appointments["dentist_id"].isin(
+        dentists["dentist_id"]
+    ).all()
+
+    assert appointments["booked_at"].lt(
+        appointments["scheduled_start_at"]
+    ).all()
+
+    completed_mask = appointments[
+        "status"
+    ].eq("completed")
+
+    completed_times = appointments.loc[
+        completed_mask,
+        [
+            "check_in_at",
+            "chair_start_at",
+            "chair_end_at",
+            "checkout_at",
+        ],
+    ]
+
+    assert completed_times.notna().all().all()
+
+    assert (
+            completed_times["check_in_at"]
+            <= completed_times["chair_start_at"]
+    ).all()
+
+    assert (
+            completed_times["chair_start_at"]
+            < completed_times["chair_end_at"]
+    ).all()
+
+    assert (
+            completed_times["chair_end_at"]
+            <= completed_times["checkout_at"]
+    ).all()
+
+    changed_mask = appointments["status"].isin(
+        [
+            "cancelled",
+            "rescheduled",
+        ]
+    )
+
+    assert appointments.loc[
+        changed_mask,
+        "status_updated_at",
+    ].notna().all()
+
+    assert appointments.loc[
+        changed_mask,
+        "status_change_reason",
+    ].notna().all()
+
+    linked_reschedules = appointments[
+        "rescheduled_from_appointment_id"
+    ].dropna()
+
+    assert linked_reschedules.isin(
+        appointments["appointment_id"]
+    ).all()
+
+    completed_appointment_ids = appointments.loc[
+        completed_mask,
+        "appointment_id",
+    ]
+
+    assert appointment_procedures[
+        "appointment_id"
+    ].isin(
+        completed_appointment_ids
+    ).all()
+
+    active_procedure_codes = procedure_catalog.loc[
+        procedure_catalog["active"],
+        "procedure_code",
+    ]
+
+    assert appointment_procedures[
+        "procedure_code"
+    ].isin(
+        active_procedure_codes
+    ).all()
+
+    assert appointment_procedures[
+        "fee_amount"
+    ].gt(0).all()
+
+    assert appointment_procedures[
+        "discount_amount"
+    ].ge(0).all()
+
+    assert (
+            appointment_procedures["discount_amount"]
+            <= appointment_procedures["fee_amount"]
+    ).all()
+
+    assert appointment_procedures[
+        "direct_cost"
+    ].ge(0).all()
+
+    assert treatment_plans["patient_id"].isin(
+        patients["patient_id"]
+    ).all()
+
+    assert treatment_plans[
+        "proposed_by_dentist_id"
+    ].isin(
+        dentists["dentist_id"]
+    ).all()
+
+    assert treatment_plans[
+        "source_appointment_id"
+    ].isin(
+        appointments["appointment_id"]
+    ).all()
+
+    assert treatment_plan_items["plan_id"].isin(
+        treatment_plans["plan_id"]
+    ).all()
+
+    assert treatment_plan_items[
+        "procedure_code"
+    ].isin(
+        procedure_catalog["procedure_code"]
+    ).all()
+
+    pending_mask = treatment_plan_items[
+        "decision_status"
+    ].eq("pending")
+
+    assert treatment_plan_items.loc[
+        pending_mask,
+        "decision_at",
+    ].isna().all()
+
+    assert treatment_plan_items.loc[
+        ~pending_mask,
+        "decision_at",
+    ].notna().all()
+
+    decision_check = treatment_plan_items.merge(
+        treatment_plans[
+            [
+                "plan_id",
+                "proposed_at",
+            ]
+        ],
+        on="plan_id",
+        how="left",
+        validate="many_to_one",
+    )
+
+    decided_mask = decision_check[
+        "decision_status"
+    ].ne("pending")
+
+    assert decision_check.loc[
+        decided_mask,
+        "decision_at",
+    ].ge(
+        decision_check.loc[
+            decided_mask,
+            "proposed_at",
+        ]
+    ).all()
+
+    linked_plan_items = appointment_procedures[
+        "plan_item_id"
+    ].notna()
+
+    if linked_plan_items.any():
+        plan_link_check = (
+            appointment_procedures.loc[
+                linked_plan_items,
+                [
+                    "plan_item_id",
+                    "procedure_code",
+                ],
+            ]
+            .merge(
+                treatment_plan_items[
+                    [
+                        "plan_item_id",
+                        "procedure_code",
+                    ]
+                ],
+                on="plan_item_id",
+                how="left",
+                suffixes=(
+                    "_performed",
+                    "_planned",
+                ),
+                validate="many_to_one",
+            )
+        )
+
+        assert plan_link_check[
+            "procedure_code_planned"
+        ].notna().all()
+
+        assert (
+                plan_link_check[
+                    "procedure_code_performed"
+                ]
+                == plan_link_check[
+                    "procedure_code_planned"
+                ]
+        ).all()
+
+    assert payments["patient_id"].isin(
+        patients["patient_id"]
+    ).all()
+
+    assert payments["amount"].gt(0).all()
+
+    completed_payment_ids = payments.loc[
+        payments["payment_status"].eq(
+            "completed"
+        ),
+        "payment_id",
+    ]
+
+    assert payment_allocations[
+        "payment_id"
+    ].isin(
+        completed_payment_ids
+    ).all()
+
+    assert payment_allocations[
+        "appointment_procedure_id"
+    ].isin(
+        appointment_procedures[
+            "appointment_procedure_id"
+        ]
+    ).all()
+
+    assert payment_allocations[
+        "allocated_amount"
+    ].gt(0).all()
+
+    allocated_totals = (
+        payment_allocations.groupby(
+            "payment_id"
+        )["allocated_amount"]
+        .sum()
+    )
+
+    payment_amounts = payments.set_index(
+        "payment_id"
+    )["amount"]
+
+    assert allocated_totals.le(
+        payment_amounts.loc[
+            allocated_totals.index
+        ]
+        + 0.01
+    ).all()
 
 
 def main() -> None:
     args = parse_args()
-    args.output.mkdir(parents=True, exist_ok=True)
-    patients = generate_patients(args.patients)
+    args.output.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    patients = generate_patients(
+        args.patients
+    )
+
     dentists = generate_dentists()
+
     appointments = generate_appointments(
         args.appointments,
         patients,
         dentists,
     )
-    procedures = generate_procedures(appointments)
-    plans = generate_treatment_plans(patients)
-    payments = generate_payments(appointments, procedures)
-    validate(patients, dentists, appointments, procedures, plans, payments)
+
+    procedure_catalog = (
+        generate_procedure_catalog()
+    )
+
+    appointment_procedures = (
+        generate_appointment_procedures(
+            appointments,
+            dentists,
+            procedure_catalog,
+        )
+    )
+
+    (
+        treatment_plans,
+        treatment_plan_items,
+    ) = generate_treatment_plans(
+        appointments,
+        dentists,
+        procedure_catalog,
+    )
+
+    appointment_procedures = (
+        link_accepted_plan_items_to_procedures(
+            appointments,
+            appointment_procedures,
+            treatment_plans,
+            treatment_plan_items,
+        )
+    )
+
+    (
+        payments,
+        payment_allocations,
+    ) = generate_payments(
+        appointments,
+        appointment_procedures,
+    )
+
+    validate(
+        patients,
+        dentists,
+        appointments,
+        procedure_catalog,
+        appointment_procedures,
+        treatment_plans,
+        treatment_plan_items,
+        payments,
+        payment_allocations,
+    )
 
     datasets = {
         "patients.csv": patients,
         "dentists.csv": dentists,
         "appointments.csv": appointments,
-        "procedures.csv": procedures,
-        "treatment_plans.csv": plans,
+        "procedure_catalog.csv": (
+            procedure_catalog
+        ),
+        "appointment_procedures.csv": (
+            appointment_procedures
+        ),
+        "treatment_plans.csv": (
+            treatment_plans
+        ),
+        "treatment_plan_items.csv": (
+            treatment_plan_items
+        ),
         "payments.csv": payments,
+        "payment_allocations.csv": (
+            payment_allocations
+        ),
     }
-    for name, df in datasets.items():
-        df.to_csv(args.output / name, index=False)
-        print(f"Wrote {name}: {len(df):,} rows")
+
+    for name, dataframe in datasets.items():
+        dataframe.to_csv(
+            args.output / name,
+            index=False,
+        )
+
+        print(
+            f"Wrote {name}: "
+            f"{len(dataframe):,} rows"
+        )
 
 
 if __name__ == "__main__":
