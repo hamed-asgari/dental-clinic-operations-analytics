@@ -1318,25 +1318,511 @@ def generate_appointment_procedures(
 
     return appointment_procedures
 
-def generate_treatment_plans(patients: pd.DataFrame) -> pd.DataFrame:
-    n = int(len(patients) * 0.72)
-    patient_ids = RNG.choice(patients["patient_id"], n, replace=False)
-    proposed = pd.to_datetime("2024-01-01") + pd.to_timedelta(RNG.integers(0, 730, n), unit="D")
-    values = np.round(RNG.lognormal(mean=5.0, sigma=0.65, size=n), 2)
-    status = RNG.choice(["fully_accepted", "partially_accepted", "declined", "pending"], n, p=[0.43, 0.27, 0.20, 0.10])
-    accepted_ratio = np.select(
-        [status == "fully_accepted", status == "partially_accepted", status == "declined", status == "pending"],
-        [1.0, RNG.uniform(0.25, 0.75, n), 0.0, 0.0],
-    )
-    return pd.DataFrame({
-        "plan_id": np.arange(1, n + 1),
-        "patient_id": patient_ids,
-        "proposed_date": proposed.date,
-        "total_value": values,
-        "accepted_value": np.round(values * accepted_ratio, 2),
-        "plan_status": status,
-    })
+def generate_treatment_plans(
+    appointments: pd.DataFrame,
+    dentists: pd.DataFrame,
+    procedure_catalog: pd.DataFrame,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    eligible_sources = appointments.loc[
+        appointments["status"].eq("completed")
+        & appointments["visit_type"].isin(
+            [
+                "new_patient_examination",
+                "recall_examination",
+                "consultation",
+                "emergency",
+            ]
+        )
+    ].copy()
 
+    selected_mask = (
+        RNG.random(len(eligible_sources))
+        < 0.58
+    )
+
+    selected_sources = eligible_sources.loc[
+        selected_mask
+    ].copy()
+
+    if selected_sources.empty:
+        selected_sources = eligible_sources.head(
+            1
+        ).copy()
+
+    dentist_role_by_id = dentists.set_index(
+        "dentist_id"
+    )["dentist_role"].to_dict()
+
+    catalog_by_code = procedure_catalog.set_index(
+        "procedure_code"
+    )
+
+    treatment_codes_by_role = {
+        "general_dentist": [
+            "PV001",
+            "R001",
+            "R002",
+            "R003",
+            "E001",
+            "E002",
+            "S001",
+            "PR001",
+        ],
+        "endodontist": [
+            "E001",
+            "E002",
+            "E003",
+        ],
+        "oral_surgeon": [
+            "S001",
+            "S002",
+        ],
+        "orthodontist": [
+            "O002",
+        ],
+        "prosthodontist": [
+            "R003",
+            "PR001",
+            "PR002",
+            "PR003",
+        ],
+        "periodontist": [
+            "PER001",
+            "PER002",
+        ],
+    }
+
+    adult_tooth_codes = [
+        f"{quadrant}{tooth}"
+        for quadrant in [1, 2, 3, 4]
+        for tooth in range(1, 9)
+    ]
+
+    tooth_specific_codes = {
+        "R001",
+        "R002",
+        "R003",
+        "E001",
+        "E002",
+        "E003",
+        "S001",
+        "S002",
+        "PR001",
+    }
+
+    plan_rows: list[dict[str, object]] = []
+    item_rows: list[dict[str, object]] = []
+
+    plan_id = 1
+    plan_item_id = 1
+
+    for source in selected_sources.itertuples(
+        index=False
+    ):
+        dentist_id = int(source.dentist_id)
+        dentist_role = dentist_role_by_id[
+            dentist_id
+        ]
+
+        candidate_codes = (
+            treatment_codes_by_role.get(
+                dentist_role,
+                treatment_codes_by_role[
+                    "general_dentist"
+                ],
+            )
+        )
+
+        maximum_items = min(
+            4,
+            len(candidate_codes),
+        )
+
+        item_count = int(
+            RNG.choice(
+                np.arange(
+                    1,
+                    maximum_items + 1,
+                ),
+                p=(
+                    [1.0]
+                    if maximum_items == 1
+                    else (
+                        [0.55, 0.45]
+                        if maximum_items == 2
+                        else (
+                            [0.40, 0.35, 0.25]
+                            if maximum_items == 3
+                            else [
+                                0.32,
+                                0.30,
+                                0.23,
+                                0.15,
+                            ]
+                        )
+                    )
+                ),
+            )
+        )
+
+        selected_codes = [
+            str(code)
+            for code in RNG.choice(
+                candidate_codes,
+                size=item_count,
+                replace=False,
+            )
+        ]
+
+        proposed_at = (
+            pd.Timestamp(source.chair_end_at)
+            + pd.to_timedelta(
+                int(
+                    RNG.integers(
+                        5,
+                        46,
+                    )
+                ),
+                unit="m",
+            )
+        )
+
+        valid_until = (
+            proposed_at.normalize()
+            + pd.to_timedelta(
+                int(
+                    RNG.integers(
+                        30,
+                        91,
+                    )
+                ),
+                unit="D",
+            )
+        )
+
+        plan_status = str(
+            RNG.choice(
+                [
+                    "presented",
+                    "partially_accepted",
+                    "fully_accepted",
+                    "declined",
+                    "expired",
+                ],
+                p=[
+                    0.14,
+                    0.30,
+                    0.38,
+                    0.13,
+                    0.05,
+                ],
+            )
+        )
+
+        if (
+            plan_status
+            == "partially_accepted"
+            and item_count == 1
+        ):
+            plan_status = str(
+                RNG.choice(
+                    [
+                        "fully_accepted",
+                        "declined",
+                    ],
+                    p=[0.70, 0.30],
+                )
+            )
+
+        plan_rows.append(
+            {
+                "plan_id": plan_id,
+                "patient_id": int(
+                    source.patient_id
+                ),
+                "proposed_by_dentist_id": (
+                    dentist_id
+                ),
+                "source_appointment_id": int(
+                    source.appointment_id
+                ),
+                "proposed_at": proposed_at,
+                "plan_status": plan_status,
+                "valid_until": (
+                    valid_until.date()
+                ),
+            }
+        )
+
+        if plan_status == "fully_accepted":
+            decisions = [
+                "accepted"
+            ] * item_count
+
+        elif plan_status == "declined":
+            decisions = [
+                "declined"
+            ] * item_count
+
+        elif plan_status in {
+            "presented",
+            "expired",
+        }:
+            decisions = [
+                "pending"
+            ] * item_count
+
+        else:
+            accepted_count = int(
+                RNG.integers(
+                    1,
+                    item_count,
+                )
+            )
+
+            decisions = (
+                ["accepted"] * accepted_count
+                + [
+                    str(
+                        RNG.choice(
+                            [
+                                "declined",
+                                "deferred",
+                            ],
+                            p=[0.65, 0.35],
+                        )
+                    )
+                    for _ in range(
+                        item_count
+                        - accepted_count
+                    )
+                ]
+            )
+
+            RNG.shuffle(decisions)
+
+        for sequence_order, (
+            procedure_code,
+            decision_status,
+        ) in enumerate(
+            zip(
+                selected_codes,
+                decisions,
+            ),
+            start=1,
+        ):
+            catalog_record = (
+                catalog_by_code.loc[
+                    procedure_code
+                ]
+            )
+
+            procedure_group = str(
+                catalog_record[
+                    "procedure_group"
+                ]
+            )
+
+            if procedure_group in {
+                "endodontic",
+                "surgical",
+            }:
+                priority_level = str(
+                    RNG.choice(
+                        [
+                            "urgent",
+                            "short_term",
+                            "elective",
+                        ],
+                        p=[0.35, 0.50, 0.15],
+                    )
+                )
+            elif procedure_group in {
+                "preventive",
+                "periodontal",
+            }:
+                priority_level = str(
+                    RNG.choice(
+                        [
+                            "short_term",
+                            "elective",
+                            "maintenance",
+                        ],
+                        p=[0.35, 0.35, 0.30],
+                    )
+                )
+            else:
+                priority_level = str(
+                    RNG.choice(
+                        [
+                            "short_term",
+                            "elective",
+                            "maintenance",
+                        ],
+                        p=[0.35, 0.55, 0.10],
+                    )
+                )
+
+            proposed_quantity = 1
+
+            if procedure_code == "PER001":
+                proposed_quantity = int(
+                    RNG.integers(
+                        1,
+                        5,
+                    )
+                )
+
+            proposed_fee_amount = float(
+                np.round(
+                    catalog_record[
+                        "standard_fee_amount"
+                    ]
+                    * proposed_quantity
+                    * RNG.uniform(
+                        0.95,
+                        1.15,
+                    ),
+                    2,
+                )
+            )
+
+            discount_rate = float(
+                RNG.choice(
+                    [
+                        0.00,
+                        0.05,
+                        0.10,
+                        0.15,
+                    ],
+                    p=[
+                        0.68,
+                        0.17,
+                        0.10,
+                        0.05,
+                    ],
+                )
+            )
+
+            proposed_discount_amount = float(
+                np.round(
+                    proposed_fee_amount
+                    * discount_rate,
+                    2,
+                )
+            )
+
+            if (
+                procedure_code
+                in tooth_specific_codes
+            ):
+                tooth_code: object = str(
+                    RNG.choice(
+                        adult_tooth_codes
+                    )
+                )
+            else:
+                tooth_code = pd.NA
+
+            if decision_status == "pending":
+                decision_at: object = pd.NaT
+            else:
+                maximum_decision_days = max(
+                    1,
+                    (
+                        pd.Timestamp(
+                            valid_until
+                        )
+                        - proposed_at.normalize()
+                    ).days,
+                )
+
+                decision_days = int(
+                    RNG.integers(
+                        0,
+                        min(
+                            maximum_decision_days,
+                            30,
+                        )
+                        + 1,
+                    )
+                )
+
+                decision_minutes = int(
+                    RNG.integers(
+                        9 * 60,
+                        19 * 60,
+                    )
+                )
+
+                decision_at = (
+                    proposed_at.normalize()
+                    + pd.to_timedelta(
+                        decision_days,
+                        unit="D",
+                    )
+                    + pd.to_timedelta(
+                        decision_minutes,
+                        unit="m",
+                    )
+                )
+
+                if decision_at < proposed_at:
+                    decision_at = (
+                        proposed_at
+                        + pd.Timedelta(
+                            minutes=30
+                        )
+                    )
+
+            item_rows.append(
+                {
+                    "plan_item_id": (
+                        plan_item_id
+                    ),
+                    "plan_id": plan_id,
+                    "procedure_code": (
+                        procedure_code
+                    ),
+                    "tooth_code": tooth_code,
+                    "sequence_order": (
+                        sequence_order
+                    ),
+                    "priority_level": (
+                        priority_level
+                    ),
+                    "proposed_quantity": (
+                        proposed_quantity
+                    ),
+                    "proposed_fee_amount": (
+                        proposed_fee_amount
+                    ),
+                    "proposed_discount_amount": (
+                        proposed_discount_amount
+                    ),
+                    "decision_status": (
+                        decision_status
+                    ),
+                    "decision_at": decision_at,
+                }
+            )
+
+            plan_item_id += 1
+
+        plan_id += 1
+
+    treatment_plans = pd.DataFrame(
+        plan_rows
+    )
+
+    treatment_plan_items = pd.DataFrame(
+        item_rows
+    )
+
+    return (
+        treatment_plans,
+        treatment_plan_items,
+    )
 
 def generate_payments(appointments: pd.DataFrame, procedures: pd.DataFrame) -> pd.DataFrame:
     merged = procedures.merge(appointments[["appointment_id", "patient_id", "appointment_datetime"]], on="appointment_id", how="left")
