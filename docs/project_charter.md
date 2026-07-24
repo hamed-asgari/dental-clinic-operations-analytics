@@ -1,10 +1,18 @@
 # Project Charter
 
+## Project owner
+Hamed Asgari, General Dentist
+
+## Project context
+This portfolio project models the operations of a medium-sized outpatient dental clinic using fully synthetic data. It is informed by the project owner's clinical experience in general dentistry in Iran, but it does not represent any real clinic, patient, treatment, or financial record.
+
 ## Project title
 Dental Clinic Operations Analytics
 
 ## Background
-The project owner is a general dentist developing skills in clinical data science and artificial intelligence. The first portfolio project should connect existing knowledge of dentistry, SQL, Python, pandas, machine learning, and Power BI.
+Dental clinics generate operational data through appointments, procedures, treatment plans, payments, cancellations, and patient follow-up. However, these data are often fragmented and are not systematically converted into management insights.
+
+This project combines the project owner's clinical background in general dentistry with SQL, Python, pandas, and Power BI to demonstrate how synthetic clinic data can support operational analysis and managerial decision-making.
 
 ## Primary user
 A dental-clinic manager who wants to understand operational performance and identify practical improvements.

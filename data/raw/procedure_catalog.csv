@@ -1,0 +1,25 @@
+procedure_code,procedure_name,procedure_group,default_planned_duration_min,standard_fee_amount,standard_direct_cost,active
+D001,Comprehensive examination,diagnostic,45,35.0,4.0,True
+D002,Recall examination,diagnostic,30,25.0,3.0,True
+D003,Emergency examination,diagnostic,30,45.0,5.0,True
+D004,Periapical radiograph,diagnostic,10,12.0,2.0,True
+PV001,Dental prophylaxis,preventive,45,55.0,12.0,True
+PV002,Fluoride application,preventive,15,25.0,5.0,True
+R001,Composite restoration one surface,restorative,45,85.0,20.0,True
+R002,Composite restoration multiple surfaces,restorative,60,125.0,32.0,True
+R003,Core build-up,restorative,45,110.0,28.0,True
+R004,Amalgam restoration,restorative,45,70.0,18.0,False
+E001,Root canal treatment anterior tooth,endodontic,75,220.0,48.0,True
+E002,Root canal treatment premolar,endodontic,90,280.0,62.0,True
+E003,Root canal treatment molar,endodontic,120,380.0,90.0,True
+PER001,Scaling and root planing one quadrant,periodontal,60,140.0,40.0,True
+PER002,Periodontal maintenance,periodontal,45,75.0,20.0,True
+S001,Simple extraction,surgical,45,120.0,25.0,True
+S002,Surgical extraction,surgical,75,250.0,70.0,True
+PR001,Full ceramic crown,prosthodontic,90,520.0,210.0,True
+PR002,Removable partial denture,prosthodontic,120,780.0,330.0,True
+PR003,Complete denture,prosthodontic,180,1100.0,480.0,True
+O001,Orthodontic consultation,orthodontic,45,50.0,5.0,True
+O002,Fixed appliance adjustment,orthodontic,30,85.0,15.0,True
+PD001,Pediatric composite restoration,pediatric,45,70.0,18.0,True
+PD002,Pulpotomy of primary tooth,pediatric,60,150.0,35.0,True

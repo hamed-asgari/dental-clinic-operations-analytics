@@ -1,77 +1,230 @@
 # Dental Clinic Operations Analytics
 
-A portfolio project that demonstrates how SQL, Python, and Power BI can support operational decision-making in a dental clinic.
+A portfolio project demonstrating how SQL Server, Python, pandas, and Power BI can support operational and financial decision-making in a dental clinic.
+
+The project uses only reproducible synthetic data and contains no real patient information.
 
 ## Project status
-Version 0.1 - repository structure and synthetic data pipeline.
 
-## Problem
-Dental clinics often have fragmented information about appointments, cancellations, procedures, treatment plans, and payments. This project creates a synthetic dental-clinic database and analyzes operational performance without using real patient information.
+Version 0.2 — normalized data model, synthetic data pipeline, SQL Server schema, database loading workflow, and core analytical queries completed.
 
-## Objectives
-- Design a relational data model for a dental clinic.
-- Generate reproducible synthetic data.
-- Load and query the data with SQL.
-- Perform exploratory analysis with Python and pandas.
-- Build a Power BI dashboard for clinic managers.
-- Identify actionable opportunities to improve chair utilization, treatment acceptance, patient retention, and revenue per clinical hour.
+## Business problem
 
-## Planned KPIs
-- Appointment no-show rate
-- Cancellation rate
-- Chair utilization
-- Revenue per clinical hour
-- Treatment-plan acceptance rate
-- New-patient volume
-- Patient retention
-- Procedure mix
-- Payment collection rate
+Dental clinics often store appointment, treatment, procedure, and payment information across disconnected systems.
+
+This fragmentation makes it difficult to answer operational questions such as:
+
+- How frequently do patients cancel or miss appointments?
+- Are appointment reminders associated with lower no-show rates?
+- How much clinical chair time does each dentist deliver?
+- Which procedure groups generate the highest revenue and direct margin?
+- What proportion of proposed treatment is accepted?
+- How effectively are payments allocated to completed procedures?
+
+This project creates an integrated analytical dataset for investigating these questions.
+
+## Current capabilities
+
+The repository currently supports:
+
+- A normalized nine-table relational data model
+- Reproducible synthetic data generation
+- Automated data-quality and relationship validation
+- SQL Server table and constraint creation
+- Transactional loading of CSV data into SQL Server
+- Row-count validation after database loading
+- Core operational and financial SQL queries
+- Treatment-plan-to-procedure linkage
+- Payment-to-procedure allocation analysis
+
+## Data model
+
+The database contains nine primary tables:
+
+1. `Patients`
+2. `Dentists`
+3. `Appointments`
+4. `ProcedureCatalog`
+5. `AppointmentProcedures`
+6. `TreatmentPlans`
+7. `TreatmentPlanItems`
+8. `Payments`
+9. `PaymentAllocations`
+
+Detailed field definitions and relationships are documented in:
+
+```text
+docs/data_dictionary.md
+```
+
+## Default synthetic dataset
+
+The default generator currently produces:
+
+| Dataset | Rows |
+|---|---:|
+| Patients | 2,000 |
+| Dentists | 7 |
+| Appointments | 8,000 |
+| Procedure catalog | 24 |
+| Appointment procedures | 8,378 |
+| Treatment plans | 1,775 |
+| Treatment plan items | 3,596 |
+| Payments | 7,973 |
+| Payment allocations | 9,616 |
+
+Because the random seed is fixed, rerunning the generator produces the same datasets.
+
+## Core analytical questions
+
+The current SQL queries examine:
+
+- Appointment status distribution
+- No-show rate by reminder status
+- Monthly chair-time performance by dentist
+- Revenue and direct margin by procedure group
+- Treatment-plan acceptance by item count and proposed value
+
+Additional analysis will cover patient retention, payment collection, utilization, procedure mix, and revenue per clinical hour.
+
+## Technology stack
+
+- Python 3.12
+- pandas
+- NumPy
+- pyodbc
+- Microsoft SQL Server
+- SQL Server ODBC Driver 17
+- Power BI
+- Jupyter Notebook
+- Git and GitHub
 
 ## Repository structure
+
 ```text
 .
-├── data/
-│   ├── raw/
-│   └── processed/
-├── docs/
-│   ├── data_dictionary.md
-│   └── project_charter.md
-├── images/
-├── notebooks/
-│   └── 01_eda.ipynb
-├── powerbi/
-│   └── README.md
-├── sql/
-│   ├── 01_schema.sql
-│   └── 02_analytics_queries.sql
-├── src/
-│   └── generate_synthetic_data.py
-├── .gitignore
-├── LICENSE
-└── requirements.txt
+|-- data/
+|   |-- raw/
+|   `-- processed/
+|-- docs/
+|   |-- data_dictionary.md
+|   `-- project_charter.md
+|-- images/
+|-- notebooks/
+|   `-- 01_eda.ipynb
+|-- powerbi/
+|   `-- README.md
+|-- sql/
+|   |-- 01_schema.sql
+|   `-- 02_analytics_queries.sql
+|-- src/
+|   |-- generate_synthetic_data.py
+|   `-- load_csv_to_sql_server.py
+|-- .gitignore
+|-- LICENSE
+|-- README.md
+`-- requirements.txt
 ```
 
 ## Quick start
-```bash
+
+### 1. Create and activate the Python environment
+
+```powershell
 python -m venv .venv
-# Windows
-.venv\Scripts\activate
+.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
-python src/generate_synthetic_data.py
 ```
 
-The script writes reproducible synthetic CSV files to `data/raw/`.
+### 2. Generate the synthetic datasets
+
+```powershell
+python src\generate_synthetic_data.py
+```
+
+The generated CSV files are written to:
+
+```text
+data/raw/
+```
+
+### 3. Create the SQL Server test database
+
+The following commands use Windows integrated authentication:
+
+```powershell
+sqlcmd -S localhost -E -Q "IF DB_ID('DentalClinicAnalytics_Test') IS NULL CREATE DATABASE DentalClinicAnalytics_Test;"
+```
+
+### 4. Create the database schema
+
+```powershell
+sqlcmd -S localhost -E -d DentalClinicAnalytics_Test -b -i sql\01_schema.sql
+```
+
+The schema script creates all tables, primary keys, foreign keys, validation constraints, and indexes.
+
+### 5. Load the CSV data into SQL Server
+
+```powershell
+python src\load_csv_to_sql_server.py
+```
+
+The loader:
+
+- Reads all nine CSV files
+- Converts values to database-compatible types
+- Loads tables in dependency order
+- Uses a single database transaction
+- Rolls back changes if loading fails
+- Verifies database row counts before committing
+
+A different server, database, driver, or data directory can be supplied through command-line arguments:
+
+```powershell
+python src\load_csv_to_sql_server.py --help
+```
+
+### 6. Run the analytical SQL queries
+
+```powershell
+sqlcmd -S localhost -E -d DentalClinicAnalytics_Test -b -i sql\02_analytics_queries.sql
+```
+
+## Data integrity
+
+The project validates several important relationships, including:
+
+- Every appointment belongs to an existing patient and dentist
+- Every performed procedure uses a valid procedure code
+- Treatment-plan items belong to valid treatment plans
+- Performed procedures can be linked to accepted treatment-plan items
+- Payments belong to valid patients
+- Payment allocations link valid payments to performed procedures
+- Duplicate non-null payment reference codes are prohibited
 
 ## Ethics and limitations
-- All records in this repository are synthetic.
-- The project is for education and portfolio demonstration only.
-- It must not be used for clinical decisions.
-- Results from synthetic data cannot be generalized to real clinics.
 
-## Next milestones
-- [ ] Review and finalize the data dictionary.
-- [ ] Generate synthetic data and validate referential integrity.
-- [ ] Create the SQL Server database.
-- [ ] Write the first ten analytical queries.
-- [ ] Complete exploratory data analysis.
-- [ ] Build the first Power BI dashboard page.
+- All records in this repository are synthetic.
+- No real patient, dentist, or clinic data are included.
+- The project is intended for education and portfolio demonstration.
+- It must not be used to support clinical decisions.
+- Results generated from synthetic data cannot be generalized to real dental clinics.
+- Relationships in the synthetic data represent designed scenarios rather than causal evidence.
+
+## Roadmap
+
+- [x] Define the project scope and business questions
+- [x] Design the normalized relational data model
+- [x] Document the data dictionary
+- [x] Generate reproducible synthetic datasets
+- [x] Validate referential integrity
+- [x] Create the SQL Server schema
+- [x] Build the SQL Server data-loading workflow
+- [x] Implement the first core analytical queries
+- [ ] Expand the analytical SQL query library
+- [ ] Complete exploratory data analysis with Python
+- [ ] Create processed analytical datasets
+- [ ] Build the Power BI data model
+- [ ] Develop the first Power BI dashboard
+- [ ] Document findings and management recommendations
