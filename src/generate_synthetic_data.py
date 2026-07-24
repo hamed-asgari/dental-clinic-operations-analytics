@@ -723,32 +723,600 @@ def generate_appointments(
 
     return appointments
 
-def generate_procedures(appointments: pd.DataFrame) -> pd.DataFrame:
-    completed = appointments.loc[appointments["status"] == "completed"].copy()
-    groups = completed["appointment_type"].replace({"examination": "diagnostic", "hygiene": "preventive"})
-    fee_ranges = {
-        "diagnostic": (10, 35), "preventive": (25, 65), "restorative": (45, 150),
-        "endodontic": (100, 280), "surgery": (80, 300), "prosthetic": (120, 550),
-    }
-    fees = []
-    costs = []
-    actual = []
-    for group, planned in zip(groups, completed["planned_duration_min"]):
-        low, high = fee_ranges[group]
-        fee = float(np.round(RNG.uniform(low, high), 2))
-        fees.append(fee)
-        costs.append(float(np.round(fee * RNG.uniform(0.12, 0.38), 2)))
-        actual.append(int(max(15, RNG.normal(planned, planned * 0.18))))
-    return pd.DataFrame({
-        "procedure_id": np.arange(1, len(completed) + 1),
-        "appointment_id": completed["appointment_id"].to_numpy(),
-        "procedure_code": [f"P{1000+i}" for i in range(len(completed))],
-        "procedure_group": groups.to_numpy(),
-        "actual_duration_min": actual,
-        "fee_amount": fees,
-        "direct_cost": costs,
-    })
+def generate_procedure_catalog() -> pd.DataFrame:
+    records = [
+        (
+            "D001",
+            "Comprehensive examination",
+            "diagnostic",
+            45,
+            35.00,
+            4.00,
+            True,
+        ),
+        (
+            "D002",
+            "Recall examination",
+            "diagnostic",
+            30,
+            25.00,
+            3.00,
+            True,
+        ),
+        (
+            "D003",
+            "Emergency examination",
+            "diagnostic",
+            30,
+            45.00,
+            5.00,
+            True,
+        ),
+        (
+            "D004",
+            "Periapical radiograph",
+            "diagnostic",
+            10,
+            12.00,
+            2.00,
+            True,
+        ),
+        (
+            "PV001",
+            "Dental prophylaxis",
+            "preventive",
+            45,
+            55.00,
+            12.00,
+            True,
+        ),
+        (
+            "PV002",
+            "Fluoride application",
+            "preventive",
+            15,
+            25.00,
+            5.00,
+            True,
+        ),
+        (
+            "R001",
+            "Composite restoration one surface",
+            "restorative",
+            45,
+            85.00,
+            20.00,
+            True,
+        ),
+        (
+            "R002",
+            "Composite restoration multiple surfaces",
+            "restorative",
+            60,
+            125.00,
+            32.00,
+            True,
+        ),
+        (
+            "R003",
+            "Core build-up",
+            "restorative",
+            45,
+            110.00,
+            28.00,
+            True,
+        ),
+        (
+            "R004",
+            "Amalgam restoration",
+            "restorative",
+            45,
+            70.00,
+            18.00,
+            False,
+        ),
+        (
+            "E001",
+            "Root canal treatment anterior tooth",
+            "endodontic",
+            75,
+            220.00,
+            48.00,
+            True,
+        ),
+        (
+            "E002",
+            "Root canal treatment premolar",
+            "endodontic",
+            90,
+            280.00,
+            62.00,
+            True,
+        ),
+        (
+            "E003",
+            "Root canal treatment molar",
+            "endodontic",
+            120,
+            380.00,
+            90.00,
+            True,
+        ),
+        (
+            "PER001",
+            "Scaling and root planing one quadrant",
+            "periodontal",
+            60,
+            140.00,
+            40.00,
+            True,
+        ),
+        (
+            "PER002",
+            "Periodontal maintenance",
+            "periodontal",
+            45,
+            75.00,
+            20.00,
+            True,
+        ),
+        (
+            "S001",
+            "Simple extraction",
+            "surgical",
+            45,
+            120.00,
+            25.00,
+            True,
+        ),
+        (
+            "S002",
+            "Surgical extraction",
+            "surgical",
+            75,
+            250.00,
+            70.00,
+            True,
+        ),
+        (
+            "PR001",
+            "Full ceramic crown",
+            "prosthodontic",
+            90,
+            520.00,
+            210.00,
+            True,
+        ),
+        (
+            "PR002",
+            "Removable partial denture",
+            "prosthodontic",
+            120,
+            780.00,
+            330.00,
+            True,
+        ),
+        (
+            "PR003",
+            "Complete denture",
+            "prosthodontic",
+            180,
+            1100.00,
+            480.00,
+            True,
+        ),
+        (
+            "O001",
+            "Orthodontic consultation",
+            "orthodontic",
+            45,
+            50.00,
+            5.00,
+            True,
+        ),
+        (
+            "O002",
+            "Fixed appliance adjustment",
+            "orthodontic",
+            30,
+            85.00,
+            15.00,
+            True,
+        ),
+        (
+            "PD001",
+            "Pediatric composite restoration",
+            "pediatric",
+            45,
+            70.00,
+            18.00,
+            True,
+        ),
+        (
+            "PD002",
+            "Pulpotomy of primary tooth",
+            "pediatric",
+            60,
+            150.00,
+            35.00,
+            True,
+        ),
+    ]
 
+    columns = [
+        "procedure_code",
+        "procedure_name",
+        "procedure_group",
+        "default_planned_duration_min",
+        "standard_fee_amount",
+        "standard_direct_cost",
+        "active",
+    ]
+
+    return pd.DataFrame(
+        records,
+        columns=columns,
+    )
+
+def generate_appointment_procedures(
+    appointments: pd.DataFrame,
+    dentists: pd.DataFrame,
+    procedure_catalog: pd.DataFrame,
+) -> pd.DataFrame:
+    completed_appointments = appointments.loc[
+        appointments["status"] == "completed"
+    ].copy()
+
+    dentist_role_by_id = dentists.set_index(
+        "dentist_id"
+    )["dentist_role"].to_dict()
+
+    catalog_by_code = procedure_catalog.set_index(
+        "procedure_code"
+    )
+
+    active_codes = set(
+        procedure_catalog.loc[
+            procedure_catalog["active"],
+            "procedure_code",
+        ]
+    )
+
+    adult_tooth_codes = [
+        f"{quadrant}{tooth}"
+        for quadrant in [1, 2, 3, 4]
+        for tooth in range(1, 9)
+    ]
+
+    tooth_specific_codes = {
+        "D004",
+        "R001",
+        "R002",
+        "R003",
+        "E001",
+        "E002",
+        "E003",
+        "S001",
+        "S002",
+        "PR001",
+    }
+
+    treatment_codes_by_role = {
+        "general_dentist": [
+            "PV001",
+            "PV002",
+            "R001",
+            "R002",
+            "R003",
+            "E001",
+            "E002",
+            "S001",
+        ],
+        "endodontist": [
+            "E001",
+            "E002",
+            "E003",
+        ],
+        "oral_surgeon": [
+            "S001",
+            "S002",
+        ],
+        "orthodontist": [
+            "O002",
+        ],
+        "prosthodontist": [
+            "R003",
+            "PR001",
+            "PR002",
+            "PR003",
+        ],
+        "periodontist": [
+            "PER001",
+            "PER002",
+        ],
+    }
+
+    emergency_codes_by_role = {
+        "general_dentist": [
+            "R001",
+            "R002",
+            "E001",
+            "E002",
+            "S001",
+        ],
+        "endodontist": [
+            "E001",
+            "E002",
+            "E003",
+        ],
+        "oral_surgeon": [
+            "S001",
+            "S002",
+        ],
+        "orthodontist": [],
+        "prosthodontist": [
+            "R003",
+            "PR001",
+        ],
+        "periodontist": [
+            "PER001",
+            "S001",
+        ],
+    }
+
+    follow_up_code_by_role = {
+        "general_dentist": "D002",
+        "endodontist": "D002",
+        "oral_surgeon": "D002",
+        "orthodontist": "O002",
+        "prosthodontist": "D002",
+        "periodontist": "PER002",
+    }
+
+    rows: list[dict[str, object]] = []
+    appointment_procedure_id = 1
+
+    for appointment in completed_appointments.itertuples(
+        index=False
+    ):
+        dentist_role = dentist_role_by_id[
+            int(appointment.dentist_id)
+        ]
+
+        visit_type = appointment.visit_type
+        selected_codes: list[str] = []
+
+        if visit_type == "new_patient_examination":
+            selected_codes.append("D001")
+
+            if RNG.random() < 0.35:
+                selected_codes.append("D004")
+
+        elif visit_type == "recall_examination":
+            selected_codes.append("D002")
+
+            if RNG.random() < 0.45:
+                selected_codes.append("PV001")
+
+            if RNG.random() < 0.20:
+                selected_codes.append("D004")
+
+        elif visit_type == "consultation":
+            if dentist_role == "orthodontist":
+                selected_codes.append("O001")
+            else:
+                selected_codes.append("D001")
+
+            if RNG.random() < 0.20:
+                selected_codes.append("D004")
+
+        elif visit_type == "follow_up":
+            selected_codes.append(
+                follow_up_code_by_role.get(
+                    dentist_role,
+                    "D002",
+                )
+            )
+
+        elif visit_type == "emergency":
+            selected_codes.append("D003")
+
+            if RNG.random() < 0.50:
+                selected_codes.append("D004")
+
+            emergency_candidates = (
+                emergency_codes_by_role.get(
+                    dentist_role,
+                    [],
+                )
+            )
+
+            if (
+                emergency_candidates
+                and RNG.random() < 0.60
+            ):
+                selected_codes.append(
+                    str(
+                        RNG.choice(
+                            emergency_candidates
+                        )
+                    )
+                )
+
+        elif visit_type == "treatment":
+            treatment_candidates = (
+                treatment_codes_by_role.get(
+                    dentist_role,
+                    treatment_codes_by_role[
+                        "general_dentist"
+                    ],
+                )
+            )
+
+            procedure_count = int(
+                RNG.choice(
+                    [1, 2],
+                    p=[0.82, 0.18],
+                )
+            )
+
+            procedure_count = min(
+                procedure_count,
+                len(treatment_candidates),
+            )
+
+            selected_codes.extend(
+                [
+                    str(code)
+                    for code in RNG.choice(
+                        treatment_candidates,
+                        size=procedure_count,
+                        replace=False,
+                    )
+                ]
+            )
+
+            if RNG.random() < 0.18:
+                selected_codes.insert(
+                    0,
+                    "D004",
+                )
+
+        selected_codes = list(
+            dict.fromkeys(selected_codes)
+        )
+
+        for procedure_code in selected_codes:
+            if procedure_code not in active_codes:
+                raise ValueError(
+                    "Inactive or unknown procedure "
+                    f"code selected: {procedure_code}"
+                )
+
+            catalog_record = catalog_by_code.loc[
+                procedure_code
+            ]
+
+            completion_status = str(
+                RNG.choice(
+                    [
+                        "completed",
+                        "partially_completed",
+                        "discontinued",
+                    ],
+                    p=[0.96, 0.03, 0.01],
+                )
+            )
+
+            fee_factor_by_status = {
+                "completed": 1.00,
+                "partially_completed": 0.65,
+                "discontinued": 0.25,
+            }
+
+            cost_factor_by_status = {
+                "completed": 1.00,
+                "partially_completed": 0.70,
+                "discontinued": 0.25,
+            }
+
+            fee_amount = float(
+                np.round(
+                    catalog_record[
+                        "standard_fee_amount"
+                    ]
+                    * RNG.uniform(0.92, 1.12)
+                    * fee_factor_by_status[
+                        completion_status
+                    ],
+                    2,
+                )
+            )
+
+            discount_rate = float(
+                RNG.choice(
+                    [0.00, 0.05, 0.10, 0.15],
+                    p=[0.70, 0.15, 0.10, 0.05],
+                )
+            )
+
+            discount_amount = float(
+                np.round(
+                    fee_amount * discount_rate,
+                    2,
+                )
+            )
+
+            direct_cost = float(
+                np.round(
+                    catalog_record[
+                        "standard_direct_cost"
+                    ]
+                    * RNG.uniform(0.90, 1.15)
+                    * cost_factor_by_status[
+                        completion_status
+                    ],
+                    2,
+                )
+            )
+
+            if procedure_code in tooth_specific_codes:
+                tooth_code: object = str(
+                    RNG.choice(adult_tooth_codes)
+                )
+            else:
+                tooth_code = pd.NA
+
+            rows.append(
+                {
+                    "appointment_procedure_id": (
+                        appointment_procedure_id
+                    ),
+                    "appointment_id": int(
+                        appointment.appointment_id
+                    ),
+                    "plan_item_id": pd.NA,
+                    "procedure_code": procedure_code,
+                    "tooth_code": tooth_code,
+                    "quantity": 1,
+                    "completion_status": (
+                        completion_status
+                    ),
+                    "fee_amount": fee_amount,
+                    "discount_amount": (
+                        discount_amount
+                    ),
+                    "direct_cost": direct_cost,
+                }
+            )
+
+            appointment_procedure_id += 1
+
+    columns = [
+        "appointment_procedure_id",
+        "appointment_id",
+        "plan_item_id",
+        "procedure_code",
+        "tooth_code",
+        "quantity",
+        "completion_status",
+        "fee_amount",
+        "discount_amount",
+        "direct_cost",
+    ]
+
+    appointment_procedures = pd.DataFrame(
+        rows,
+        columns=columns,
+    )
+
+    appointment_procedures[
+        "plan_item_id"
+    ] = appointment_procedures[
+        "plan_item_id"
+    ].astype("Int64")
+
+    return appointment_procedures
 
 def generate_treatment_plans(patients: pd.DataFrame) -> pd.DataFrame:
     n = int(len(patients) * 0.72)
