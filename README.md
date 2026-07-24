@@ -6,7 +6,7 @@ The project uses only reproducible synthetic data and contains no real patient i
 
 ## Project status
 
-Version 0.2 — normalized data model, synthetic data pipeline, SQL Server schema, database loading workflow, and core analytical queries completed.
+Version 0.3 — normalized data model, synthetic data pipeline, SQL Server workflow, core analytical queries, and exploratory data analysis completed.
 
 ## Business problem
 
@@ -223,7 +223,7 @@ The project validates several important relationships, including:
 - [x] Build the SQL Server data-loading workflow
 - [x] Implement the first core analytical queries
 - [ ] Expand the analytical SQL query library
-- [ ] Complete exploratory data analysis with Python
+- [x] Complete exploratory data analysis with Python
 - [ ] Create processed analytical datasets
 - [ ] Build the Power BI data model
 - [ ] Develop the first Power BI dashboard
