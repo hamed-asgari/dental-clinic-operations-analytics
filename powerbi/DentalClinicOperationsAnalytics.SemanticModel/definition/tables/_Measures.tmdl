@@ -1,0 +1,247 @@
+table _Measures
+	lineageTag: f2a3918b-9c08-43a8-aa97-4fa3427e4958
+
+	measure Appointments =
+			
+			SUM ( fact_appointments[appointment_count] )
+		formatString: #,0
+		lineageTag: a3c05d46-7bc1-4f8f-9705-7a4b4397fde2
+
+	measure 'Completed Appointments' =
+			
+			SUM ( fact_appointments[completed_appointment_count] )
+		formatString: #,0
+		lineageTag: 5c49c820-9841-4eba-80f4-810cfdb44d93
+
+	measure 'No-show Count' =
+			
+			SUM ( fact_appointments[no_show_count] )
+		formatString: #,0
+		lineageTag: 7a0dcb76-9eca-4407-baf7-afbafe955611
+
+	measure 'Cancelled Count' =
+			
+			SUM ( fact_appointments[cancelled_count] )
+		formatString: #,0
+		lineageTag: e370e45e-8dc4-43de-90b0-7506afbd17af
+
+	measure 'No-show Rate' =
+			
+			DIVIDE ( [No-show Count], [Appointments] )
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 1d624f0d-4fba-45c0-ba96-6e4aa0357c98
+
+	measure 'Cancellation Rate' =
+			
+			DIVIDE (
+			    [Cancelled Count],
+			    [Appointments]
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: ecc2c135-8ab4-49c6-8c3c-39a916899b46
+
+	measure 'Planned Chair Hours' =
+			
+			DIVIDE (
+			    SUM ( fact_appointments[planned_duration_min] ),
+			    60
+			)
+		formatString: #,0.0
+		lineageTag: 1f478bb4-29fd-47a2-a362-c1021a402b51
+
+	measure 'Actual Chair Hours' =
+			
+			DIVIDE (
+			    SUM ( fact_appointments[actual_chair_minutes] ),
+			    60
+			)
+		formatString: #,0.0
+		lineageTag: 30c42bf1-c0f6-47cc-98fb-3b923d08dc4e
+
+	measure 'Scheduled Hours Estimate' =
+			
+			VAR FirstAppointmentAt =
+			    CALCULATE (
+			        MIN ( fact_appointments[scheduled_start_at] ),
+			        REMOVEFILTERS ( dim_date ),
+			        REMOVEFILTERS ( dim_dentists )
+			    )
+			VAR LastAppointmentAt =
+			    CALCULATE (
+			        MAX ( fact_appointments[scheduled_start_at] ),
+			        REMOVEFILTERS ( dim_date ),
+			        REMOVEFILTERS ( dim_dentists )
+			    )
+			VAR AppointmentDataStart =
+			    DATE (
+			        YEAR ( FirstAppointmentAt ),
+			        MONTH ( FirstAppointmentAt ),
+			        DAY ( FirstAppointmentAt )
+			    )
+			VAR AppointmentDataEnd =
+			    DATE (
+			        YEAR ( LastAppointmentAt ),
+			        MONTH ( LastAppointmentAt ),
+			        DAY ( LastAppointmentAt )
+			    )
+			RETURN
+			    SUMX (
+			        VALUES ( dim_dentists[dentist_id] ),
+			        VAR DentistStartDate =
+			            CALCULATE ( MIN ( dim_dentists[start_date] ) )
+			        VAR DentistEndDate =
+			            CALCULATE ( MAX ( dim_dentists[end_date] ) )
+			        VAR WeeklyScheduledHours =
+			            CALCULATE (
+			                MAX ( dim_dentists[scheduled_hours_weekly] )
+			            )
+			        VAR ActiveSelectedDays =
+			            COUNTROWS (
+			                FILTER (
+			                    VALUES ( dim_date[date] ),
+			                    dim_date[date] >= AppointmentDataStart
+			                        && dim_date[date] <= AppointmentDataEnd
+			                        && dim_date[date] >= DentistStartDate
+			                        && (
+			                            ISBLANK ( DentistEndDate )
+			                                || dim_date[date] <= DentistEndDate
+			                        )
+			                )
+			            )
+			        RETURN
+			            DIVIDE (
+			                WeeklyScheduledHours * ActiveSelectedDays,
+			                7
+			            )
+			    )
+		formatString: #,0.0
+		lineageTag: 8f1e6d82-0d02-4687-9584-35ed322a0f7a
+
+	measure 'Scheduled-hours Utilization Estimate' =
+			
+			DIVIDE (
+			    [Actual Chair Hours],
+			    [Scheduled Hours Estimate]
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: fc72f0cb-4392-491c-9213-b1c1e5c3e812
+
+	measure Procedures =
+			
+			SUM ( fact_procedures[procedure_count] )
+		formatString: #,0
+		lineageTag: 91df397c-84ea-40db-a3fe-ff3f86a78de2
+
+	measure 'Net Procedure Revenue' =
+			
+			SUM ( fact_procedures[net_revenue] )
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 0c5a53ad-e5ad-450b-811f-1873f986782a
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Direct Margin' =
+			
+			SUM ( fact_procedures[direct_margin] )
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: eb9d026d-93b1-4b41-887b-794a0b645a02
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Revenue per Actual Chair Hour' =
+			
+			DIVIDE (
+			    [Net Procedure Revenue],
+			    [Actual Chair Hours]
+			)
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: e0b26c7e-f88b-4867-8bcd-6c04a4d9eba0
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Outstanding Procedure Balance' =
+			
+			SUM ( fact_procedures[outstanding_balance] )
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 649011e4-ee23-4a14-9bc0-7dda19a1c7e1
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Accepted Treatment Plan Items' =
+			
+			SUM ( fact_treatment_plan_items[accepted_item_count] )
+		formatString: #,0
+		lineageTag: e0c972f2-3460-4c79-bc42-9158a6a96666
+
+	measure 'Decided Treatment Plan Items' =
+			
+			SUM ( fact_treatment_plan_items[decided_item_count] )
+		formatString: 0
+		lineageTag: ede14a88-c565-4c4c-92ef-6f8906696eea
+
+	measure 'Treatment Plan Acceptance Rate' =
+			
+			DIVIDE (
+			    [Accepted Treatment Plan Items],
+			    [Decided Treatment Plan Items]
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 026c0600-551b-4228-81fa-0fdb5ce5f928
+
+	measure 'Completed Cash Inflow' =
+			
+			SUM ( fact_payments[completed_cash_inflow] )
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: cf576a1c-86df-484b-aa8d-74a28966cc22
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Completed Refund Amount' =
+			
+			SUM ( fact_payments[completed_refund_amount] )
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 727e0e7b-ee70-4be1-a9d1-8d8aef7aadef
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Net Cash' =
+			
+			SUM ( fact_payments[net_cash_amount] )
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: b0761bff-c61c-495a-a050-ee63be6e851d
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Allocated Completed Inflows' =
+			
+			SUM ( fact_payment_allocations[allocated_amount] )
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 4f164f11-4e36-4b75-8511-3678d3739895
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Payment Collection Rate' =
+			
+			DIVIDE (
+			    [Allocated Completed Inflows],
+			    [Net Procedure Revenue]
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 3d248e1a-bfe8-4051-aa56-8ad211e6a337
+
+	column Value
+		isHidden
+		formatString: 0
+		lineageTag: 7506e5af-4895-4e9f-aea7-9cfd393f7b93
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _Measures = calculated
+		mode: import
+		source = { BLANK() }
+
+	annotation PBI_Id = ac69a5ae8afe4a11a41f23cd00d6a31c
+

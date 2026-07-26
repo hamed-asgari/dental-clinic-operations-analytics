@@ -1,0 +1,246 @@
+table fact_payment_allocations
+	lineageTag: fc35ddaf-a32f-4cdb-93de-18ae0d920cad
+
+	column allocation_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 5159f1d8-26f9-4173-a765-5dc1d16c8b3b
+		summarizeBy: sum
+		sourceColumn: allocation_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column payment_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 5ad807f4-dd2c-44af-ad6f-f4dfd2776743
+		summarizeBy: sum
+		sourceColumn: payment_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column appointment_procedure_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 46a6a66e-d766-42dd-8fed-44d9dbfe45e4
+		summarizeBy: sum
+		sourceColumn: appointment_procedure_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column appointment_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 2ad97465-42c0-4cca-8517-5dd7c3b5acd9
+		summarizeBy: sum
+		sourceColumn: appointment_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column patient_id
+		dataType: int64
+		formatString: 0
+		lineageTag: ae937173-5fd2-4f02-8767-77dcc23108ce
+		summarizeBy: none
+		sourceColumn: patient_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column dentist_id
+		dataType: int64
+		formatString: 0
+		lineageTag: f3bc7170-d255-49ea-b8ed-aac880620c10
+		summarizeBy: none
+		sourceColumn: dentist_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column procedure_code
+		dataType: string
+		lineageTag: 40c647dc-5187-492c-8405-ed76c799a273
+		summarizeBy: none
+		sourceColumn: procedure_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column payment_received_date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: dd3acf14-9f27-4ff6-a6ca-8781bf44d47a
+		summarizeBy: sum
+		sourceColumn: payment_received_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column service_date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 8660ed73-f68b-4577-a064-4521515fda91
+		summarizeBy: none
+		sourceColumn: service_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column received_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: ea11ab21-e83d-4e2b-820d-a032c7d51d04
+		summarizeBy: none
+		sourceColumn: received_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column procedure_completed_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: cd311c9a-e649-4958-a6e0-21210c8e3a30
+		summarizeBy: none
+		sourceColumn: procedure_completed_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column transaction_type
+		dataType: string
+		lineageTag: 72a5a958-456e-4e5b-91c2-aa1a815526e3
+		summarizeBy: none
+		sourceColumn: transaction_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column payment_arrangement
+		dataType: string
+		lineageTag: 3d889071-4a61-4f20-81af-c270e9b37648
+		summarizeBy: none
+		sourceColumn: payment_arrangement
+
+		annotation SummarizationSetBy = Automatic
+
+	column payment_method
+		dataType: string
+		lineageTag: bb41f8bf-bf2a-42b6-9f53-0045855aefa5
+		summarizeBy: none
+		sourceColumn: payment_method
+
+		annotation SummarizationSetBy = Automatic
+
+	column payment_status
+		dataType: string
+		lineageTag: ce2cd0ab-68e8-41b0-883b-e1b762aacbe5
+		summarizeBy: none
+		sourceColumn: payment_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column procedure_completion_status
+		dataType: string
+		lineageTag: 6f183c28-fb3e-47be-88e5-7626fc4a2899
+		summarizeBy: none
+		sourceColumn: procedure_completion_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column payment_timing_group
+		dataType: string
+		lineageTag: 52e2e67a-f121-469b-a6dc-88c61f3ab123
+		summarizeBy: none
+		sourceColumn: payment_timing_group
+
+		annotation SummarizationSetBy = Automatic
+
+	column allocation_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 013353b0-c5be-4706-8d07-e152bc616b8d
+		summarizeBy: sum
+		sourceColumn: allocation_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column allocated_amount
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 4ffad9fb-ab0b-4045-8eae-5b079b495669
+		summarizeBy: sum
+		sourceColumn: allocated_amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column days_from_procedure_completion_to_payment
+		dataType: double
+		lineageTag: 469a5843-9dc2-4c10-a92b-e1caa41df609
+		summarizeBy: sum
+		sourceColumn: days_from_procedure_completion_to_payment
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column before_completion_allocation_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 7a92f596-d4da-4a65-a53f-a183991920c6
+		summarizeBy: sum
+		sourceColumn: before_completion_allocation_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column same_day_after_completion_allocation_count
+		dataType: int64
+		formatString: 0
+		lineageTag: a2c4c06e-e3eb-494e-8892-871402402886
+		summarizeBy: sum
+		sourceColumn: same_day_after_completion_allocation_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column after_service_date_allocation_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 1e2c0ec3-8f73-4b04-bac1-4ddab9be8b8f
+		summarizeBy: sum
+		sourceColumn: after_service_date_allocation_count
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_payment_allocations = m
+		mode: import
+		source =
+				let
+				    Source = fnLoadCsv("fact_payment_allocations.csv"),
+				    ChangedType = Table.TransformColumnTypes(
+				        Source,
+				        {
+				            {"allocation_id", Int64.Type},
+				            {"payment_id", Int64.Type},
+				            {"appointment_procedure_id", Int64.Type},
+				            {"appointment_id", Int64.Type},
+				            {"patient_id", Int64.Type},
+				            {"dentist_id", Int64.Type},
+				            {"procedure_code", type text},
+				            {"payment_received_date_key", Int64.Type},
+				            {"service_date_key", Int64.Type},
+				            {"received_at", type datetime},
+				            {"procedure_completed_at", type datetime},
+				            {"transaction_type", type text},
+				            {"payment_arrangement", type text},
+				            {"payment_method", type text},
+				            {"payment_status", type text},
+				            {"procedure_completion_status", type text},
+				            {"payment_timing_group", type text},
+				            {"allocation_count", Int64.Type},
+				            {"allocated_amount", Currency.Type},
+				            {"days_from_procedure_completion_to_payment", type number},
+				            {"before_completion_allocation_count", Int64.Type},
+				            {"same_day_after_completion_allocation_count", Int64.Type},
+				            {"after_service_date_allocation_count", Int64.Type}
+				        }
+				    )
+				in
+				    ChangedType
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

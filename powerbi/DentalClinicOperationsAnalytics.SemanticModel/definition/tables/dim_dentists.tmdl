@@ -1,0 +1,92 @@
+table dim_dentists
+	lineageTag: 04559b7d-acc5-49f3-949b-7030082a5320
+
+	column dentist_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 1871dc23-9513-47a5-b583-135628e01bdc
+		summarizeBy: none
+		sourceColumn: dentist_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column dentist_role
+		dataType: string
+		lineageTag: 32c574bf-88d5-427a-b2db-fb0cf7f52ad6
+		summarizeBy: none
+		sourceColumn: dentist_role
+
+		annotation SummarizationSetBy = Automatic
+
+	column engagement_type
+		dataType: string
+		lineageTag: 2458a0d8-2e48-4092-b2c2-91257d5ce239
+		summarizeBy: none
+		sourceColumn: engagement_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column start_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 83e7c2bc-d0e7-4e14-a3cb-afa4553e34a0
+		summarizeBy: none
+		sourceColumn: start_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column end_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 04e6335b-7b5c-4939-9543-ccae623656da
+		summarizeBy: none
+		sourceColumn: end_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column scheduled_hours_weekly
+		dataType: int64
+		formatString: 0
+		lineageTag: 408c0bd4-f7d9-4d0a-aa06-854664b8b496
+		summarizeBy: sum
+		sourceColumn: scheduled_hours_weekly
+
+		annotation SummarizationSetBy = Automatic
+
+	column active
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: ad034b68-e73c-4135-9d53-601afb6340cb
+		summarizeBy: none
+		sourceColumn: active
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_dentists = m
+		mode: import
+		source =
+				let
+				    Source = fnLoadCsv("dim_dentists.csv"),
+				    ChangedType = Table.TransformColumnTypes(
+				        Source,
+				        {
+				            {"dentist_id", Int64.Type},
+				            {"dentist_role", type text},
+				            {"engagement_type", type text},
+				            {"start_date", type date},
+				            {"end_date", type date},
+				            {"scheduled_hours_weekly", Int64.Type},
+				            {"active", type logical}
+				        }
+				    )
+				in
+				    ChangedType
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

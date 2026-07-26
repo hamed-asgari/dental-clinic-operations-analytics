@@ -1,0 +1,247 @@
+table fact_payments
+	lineageTag: dbd36e45-9345-4587-92ac-fece5d989a51
+
+	column payment_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 4971e136-a87b-451e-a049-20093a363686
+		summarizeBy: sum
+		sourceColumn: payment_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column patient_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 49daab69-9a8d-4b76-bc65-240f85826d9f
+		summarizeBy: none
+		sourceColumn: patient_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column received_date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 363d8b7d-4846-49c4-954d-9e19d4d8859a
+		summarizeBy: none
+		sourceColumn: received_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column received_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 443782c6-a027-49ca-b002-67558a4f2545
+		summarizeBy: none
+		sourceColumn: received_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column transaction_type
+		dataType: string
+		lineageTag: d61b04bb-7ec2-4e53-b16a-1769b1042fb9
+		summarizeBy: none
+		sourceColumn: transaction_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column payment_arrangement
+		dataType: string
+		lineageTag: 6a6276ba-3990-4371-a757-5626cf585af7
+		summarizeBy: none
+		sourceColumn: payment_arrangement
+
+		annotation SummarizationSetBy = Automatic
+
+	column payment_method
+		dataType: string
+		lineageTag: 432a43d3-cde2-456d-b727-9cb2c06f6cb1
+		summarizeBy: none
+		sourceColumn: payment_method
+
+		annotation SummarizationSetBy = Automatic
+
+	column payment_status
+		dataType: string
+		lineageTag: 924992e4-61bc-45c3-beac-280611c70c98
+		summarizeBy: none
+		sourceColumn: payment_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column reference_code
+		dataType: string
+		lineageTag: 8dac1111-c249-4d52-b163-626eb772b197
+		summarizeBy: none
+		sourceColumn: reference_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column amount
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 47ada070-8ab4-462e-a4d7-9235f7c57db5
+		summarizeBy: sum
+		sourceColumn: amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column transaction_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 1964c087-dab5-4481-b75a-79724f450efa
+		summarizeBy: sum
+		sourceColumn: transaction_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column completed_transaction_count
+		dataType: int64
+		formatString: 0
+		lineageTag: cca926c7-b412-4d7a-92b8-e8999f32d05d
+		summarizeBy: sum
+		sourceColumn: completed_transaction_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column completed_payment_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 06d0756d-07ab-481e-b456-c4d65fa23e59
+		summarizeBy: sum
+		sourceColumn: completed_payment_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column completed_deposit_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 97720c9c-08d1-477e-9bcc-6d090b6a24c1
+		summarizeBy: sum
+		sourceColumn: completed_deposit_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column completed_refund_count
+		dataType: int64
+		formatString: 0
+		lineageTag: f2a6177d-ff32-473c-af12-341e7b536f64
+		summarizeBy: sum
+		sourceColumn: completed_refund_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column completed_cash_inflow
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: bf438bc4-776b-4835-bc91-bbd33dcd91f3
+		summarizeBy: sum
+		sourceColumn: completed_cash_inflow
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column completed_refund_amount
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 2d38bdbb-8f39-4532-b0ec-41ea2865df37
+		summarizeBy: sum
+		sourceColumn: completed_refund_amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column net_cash_amount
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 12946195-ab0b-4122-a8bd-c29e45d35ca8
+		summarizeBy: sum
+		sourceColumn: net_cash_amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column allocation_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 3ac09878-f83f-4668-a24e-156b94637801
+		summarizeBy: sum
+		sourceColumn: allocation_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column allocated_amount_total
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 79d49c39-1cea-400b-90c2-958190368694
+		summarizeBy: sum
+		sourceColumn: allocated_amount_total
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column unallocated_inflow_amount
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 38df17ec-a24f-41a2-ba39-4e5bee2d31ac
+		summarizeBy: sum
+		sourceColumn: unallocated_inflow_amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column has_unallocated_inflow_count
+		dataType: int64
+		formatString: 0
+		lineageTag: b764d932-6bfb-43e9-9665-eae11897ccf6
+		summarizeBy: sum
+		sourceColumn: has_unallocated_inflow_count
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_payments = m
+		mode: import
+		source =
+				let
+				    Source = fnLoadCsv("fact_payments.csv"),
+				    ChangedType = Table.TransformColumnTypes(
+				        Source,
+				        {
+				            {"payment_id", Int64.Type},
+				            {"patient_id", Int64.Type},
+				            {"received_date_key", Int64.Type},
+				            {"received_at", type datetime},
+				            {"transaction_type", type text},
+				            {"payment_arrangement", type text},
+				            {"payment_method", type text},
+				            {"payment_status", type text},
+				            {"reference_code", type text},
+				            {"amount", Currency.Type},
+				            {"transaction_count", Int64.Type},
+				            {"completed_transaction_count", Int64.Type},
+				            {"completed_payment_count", Int64.Type},
+				            {"completed_deposit_count", Int64.Type},
+				            {"completed_refund_count", Int64.Type},
+				            {"completed_cash_inflow", Currency.Type},
+				            {"completed_refund_amount", Currency.Type},
+				            {"net_cash_amount", Currency.Type},
+				            {"allocation_count", Int64.Type},
+				            {"allocated_amount_total", Currency.Type},
+				            {"unallocated_inflow_amount", Currency.Type},
+				            {"has_unallocated_inflow_count", Int64.Type}
+				        }
+				    )
+				in
+				    ChangedType
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

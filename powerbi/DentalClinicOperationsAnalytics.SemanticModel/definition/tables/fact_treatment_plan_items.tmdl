@@ -1,0 +1,411 @@
+table fact_treatment_plan_items
+	lineageTag: 1843ecfb-4137-4c74-a2a4-6081e071cd58
+
+	column plan_item_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 431eec3b-18c2-497b-9cfb-b520d6202a5a
+		summarizeBy: sum
+		sourceColumn: plan_item_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column plan_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 8406f797-43de-4f7c-a1ec-e6c932bcc2c9
+		summarizeBy: sum
+		sourceColumn: plan_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column patient_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 4a48ef2e-0ec0-4154-9c6e-b2a324c414c7
+		summarizeBy: none
+		sourceColumn: patient_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column proposed_by_dentist_id
+		dataType: int64
+		formatString: 0
+		lineageTag: af81843d-2344-4213-b4b1-c49d87c335ce
+		summarizeBy: none
+		sourceColumn: proposed_by_dentist_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column source_appointment_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 340d873d-5d38-416b-a3a3-49503edacb73
+		summarizeBy: sum
+		sourceColumn: source_appointment_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column procedure_code
+		dataType: string
+		lineageTag: b33e8c16-3ee6-4e3f-ab82-6fd95f47c3a0
+		summarizeBy: none
+		sourceColumn: procedure_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column proposed_date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: dc95c496-be29-4ebb-96d5-4c6309b0f30f
+		summarizeBy: none
+		sourceColumn: proposed_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column decision_date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 7ef7b5ae-d082-48db-a8d6-aba177a3cd88
+		summarizeBy: sum
+		sourceColumn: decision_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column valid_until_date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: d27bba20-5147-439d-9b53-555cadeb375f
+		summarizeBy: sum
+		sourceColumn: valid_until_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column first_linked_procedure_date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 96a9a373-f983-402f-981c-faa9adc1bee2
+		summarizeBy: sum
+		sourceColumn: first_linked_procedure_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column proposed_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 207d4647-567c-4217-9159-e62c0b591d4e
+		summarizeBy: none
+		sourceColumn: proposed_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column valid_until
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 84f32164-8fde-4345-a6d3-4a8a5aea7abe
+		summarizeBy: none
+		sourceColumn: valid_until
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column plan_status
+		dataType: string
+		lineageTag: 145605fc-9064-489d-bd47-57ebcd7200e2
+		summarizeBy: none
+		sourceColumn: plan_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column tooth_code
+		dataType: string
+		lineageTag: 33912658-cec6-4d70-8886-47af3cf89371
+		summarizeBy: none
+		sourceColumn: tooth_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column sequence_order
+		dataType: int64
+		formatString: 0
+		lineageTag: 19acb663-65fe-45cb-8793-e34e093d5e9c
+		summarizeBy: sum
+		sourceColumn: sequence_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column priority_level
+		dataType: string
+		lineageTag: d3ef537b-2870-40ef-8999-f69dca402105
+		summarizeBy: none
+		sourceColumn: priority_level
+
+		annotation SummarizationSetBy = Automatic
+
+	column proposed_quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: bd2c328c-2f17-43b0-b549-5c4178066aba
+		summarizeBy: sum
+		sourceColumn: proposed_quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column proposed_fee_amount
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 63ff1a0f-34fa-4fa4-9b97-b5954535fe2a
+		summarizeBy: sum
+		sourceColumn: proposed_fee_amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column proposed_discount_amount
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: acc144ea-0076-46a7-a23b-9ba8d3a7d635
+		summarizeBy: sum
+		sourceColumn: proposed_discount_amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column net_proposed_value
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 3a7acd25-3927-445e-82cc-e61f7e41e4ae
+		summarizeBy: sum
+		sourceColumn: net_proposed_value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column decision_status
+		dataType: string
+		lineageTag: 218d1294-39f4-4ecf-aabd-f71ae6b00f41
+		summarizeBy: none
+		sourceColumn: decision_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column decision_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: a0d4c006-d86e-49d1-938f-71d70294a2d3
+		summarizeBy: none
+		sourceColumn: decision_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column plan_item_count
+		dataType: int64
+		formatString: 0
+		lineageTag: d118fc46-95d3-46d8-9063-cd4616e05efe
+		summarizeBy: sum
+		sourceColumn: plan_item_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column accepted_item_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 55fa4045-f246-4d5a-a62a-344cfa98fb49
+		summarizeBy: sum
+		sourceColumn: accepted_item_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column declined_item_count
+		dataType: int64
+		formatString: 0
+		lineageTag: e2e4c35b-55d5-4433-85c9-33aa93706277
+		summarizeBy: sum
+		sourceColumn: declined_item_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column pending_item_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 98306d10-752d-4827-9667-d4d4213c3fa1
+		summarizeBy: sum
+		sourceColumn: pending_item_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column deferred_item_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 5a964eb8-55f4-489a-a5c2-a12e8f6c26eb
+		summarizeBy: sum
+		sourceColumn: deferred_item_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column decided_item_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 17106995-b6ee-41f7-9b49-306bd0c73184
+		summarizeBy: sum
+		sourceColumn: decided_item_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column accepted_proposed_value
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 46d45622-d09d-4a69-8ea6-44bbb58251eb
+		summarizeBy: sum
+		sourceColumn: accepted_proposed_value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column decided_proposed_value
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 2d59f281-8c65-47ff-9878-1e4b49974fa5
+		summarizeBy: sum
+		sourceColumn: decided_proposed_value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column decision_time_days
+		dataType: double
+		lineageTag: 582b7570-2979-4d99-8bdf-1d2b5bb53d7f
+		summarizeBy: sum
+		sourceColumn: decision_time_days
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column linked_procedure_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 8fc986f4-5983-43e2-9a6c-767f419991b1
+		summarizeBy: sum
+		sourceColumn: linked_procedure_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column linked_completed_procedure_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 2f0aacb0-2d30-42a2-abaf-e09a9ccf0faa
+		summarizeBy: sum
+		sourceColumn: linked_completed_procedure_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column linked_quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: 78fefe9b-199b-4712-a06a-e0c46fd13eff
+		summarizeBy: sum
+		sourceColumn: linked_quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column linked_net_revenue
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 591f8a9f-d359-4119-aabe-5b7016c41725
+		summarizeBy: sum
+		sourceColumn: linked_net_revenue
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column first_linked_procedure_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 67d483f6-d191-436a-b293-b0e104285ec0
+		summarizeBy: none
+		sourceColumn: first_linked_procedure_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column days_to_first_completed_procedure
+		dataType: double
+		lineageTag: 92fc90b7-d9b0-4448-9a65-1a96d914f8a6
+		summarizeBy: sum
+		sourceColumn: days_to_first_completed_procedure
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column accepted_item_completed_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 1d4f7358-2796-47b5-9fb1-5802fe92521b
+		summarizeBy: sum
+		sourceColumn: accepted_item_completed_count
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_treatment_plan_items = m
+		mode: import
+		source =
+				let
+				    Source = fnLoadCsv("fact_treatment_plan_items.csv"),
+				    ChangedType = Table.TransformColumnTypes(
+				        Source,
+				        {
+				            {"plan_item_id", Int64.Type},
+				            {"plan_id", Int64.Type},
+				            {"patient_id", Int64.Type},
+				            {"proposed_by_dentist_id", Int64.Type},
+				            {"source_appointment_id", Int64.Type},
+				            {"procedure_code", type text},
+				            {"proposed_date_key", Int64.Type},
+				            {"decision_date_key", Int64.Type},
+				            {"valid_until_date_key", Int64.Type},
+				            {"first_linked_procedure_date_key", Int64.Type},
+				            {"proposed_at", type datetime},
+				            {"valid_until", type date},
+				            {"plan_status", type text},
+				            {"tooth_code", type text},
+				            {"sequence_order", Int64.Type},
+				            {"priority_level", type text},
+				            {"proposed_quantity", Int64.Type},
+				            {"proposed_fee_amount", Currency.Type},
+				            {"proposed_discount_amount", Currency.Type},
+				            {"net_proposed_value", Currency.Type},
+				            {"decision_status", type text},
+				            {"decision_at", type datetime},
+				            {"plan_item_count", Int64.Type},
+				            {"accepted_item_count", Int64.Type},
+				            {"declined_item_count", Int64.Type},
+				            {"pending_item_count", Int64.Type},
+				            {"deferred_item_count", Int64.Type},
+				            {"decided_item_count", Int64.Type},
+				            {"accepted_proposed_value", Currency.Type},
+				            {"decided_proposed_value", Currency.Type},
+				            {"decision_time_days", type number},
+				            {"linked_procedure_count", Int64.Type},
+				            {"linked_completed_procedure_count", Int64.Type},
+				            {"linked_quantity", Int64.Type},
+				            {"linked_net_revenue", Currency.Type},
+				            {"first_linked_procedure_at", type datetime},
+				            {"days_to_first_completed_procedure", type number},
+				            {"accepted_item_completed_count", Int64.Type}
+				        }
+				    )
+				in
+				    ChangedType
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

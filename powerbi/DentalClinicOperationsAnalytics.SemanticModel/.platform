@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "DentalClinicOperationsAnalytics"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "3d8176f4-b540-4efe-8311-02b6f9f45478"
+  }
+}

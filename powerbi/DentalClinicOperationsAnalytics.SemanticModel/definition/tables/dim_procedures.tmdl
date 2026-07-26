@@ -1,0 +1,91 @@
+table dim_procedures
+	lineageTag: 03a9897c-eecb-4cba-92e2-625f025e842f
+
+	column procedure_code
+		dataType: string
+		lineageTag: c127520a-17fc-4feb-b364-e63c4eb9bea0
+		summarizeBy: none
+		sourceColumn: procedure_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column procedure_name
+		dataType: string
+		lineageTag: 2274ff92-53f6-4cae-9e6c-95fa5b3ad2c4
+		summarizeBy: none
+		sourceColumn: procedure_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column procedure_group
+		dataType: string
+		lineageTag: 806c5ee6-36aa-490f-bba4-ff9018d870fb
+		summarizeBy: none
+		sourceColumn: procedure_group
+
+		annotation SummarizationSetBy = Automatic
+
+	column default_planned_duration_min
+		dataType: int64
+		formatString: 0
+		lineageTag: df44dc1e-a3b5-48e1-954a-dc7119217ee7
+		summarizeBy: sum
+		sourceColumn: default_planned_duration_min
+
+		annotation SummarizationSetBy = Automatic
+
+	column standard_fee_amount
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: d39d20f5-15b3-43a3-b0ab-fdb30a83afe7
+		summarizeBy: sum
+		sourceColumn: standard_fee_amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column standard_direct_cost
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 1508cea8-7999-41a8-826f-64367b8b6af1
+		summarizeBy: sum
+		sourceColumn: standard_direct_cost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column active
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: e5606f6d-a0cd-4fde-8940-a3abd42dcb23
+		summarizeBy: none
+		sourceColumn: active
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_procedures = m
+		mode: import
+		source =
+				let
+				    Source = fnLoadCsv("dim_procedures.csv"),
+				    ChangedType = Table.TransformColumnTypes(
+				        Source,
+				        {
+				            {"procedure_code", type text},
+				            {"procedure_name", type text},
+				            {"procedure_group", type text},
+				            {"default_planned_duration_min", Int64.Type},
+				            {"standard_fee_amount", Currency.Type},
+				            {"standard_direct_cost", Currency.Type},
+				            {"active", type logical}
+				        }
+				    )
+				in
+				    ChangedType
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

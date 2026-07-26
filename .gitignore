@@ -9,3 +9,6 @@ Thumbs.db
 # Uncomment if generated data becomes too large
 # data/raw/*.csv
 .idea/
+# Power BI local cache and settings
+**/.pbi/localSettings.json
+**/.pbi/cache.abf

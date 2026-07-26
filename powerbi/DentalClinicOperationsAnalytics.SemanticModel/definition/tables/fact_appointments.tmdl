@@ -1,0 +1,356 @@
+table fact_appointments
+	lineageTag: e951a170-c5e2-464e-ba26-0ee09acd7e7a
+
+	column appointment_id
+		dataType: int64
+		formatString: 0
+		lineageTag: c2477a03-7953-4398-ae54-67c31221f1c8
+		summarizeBy: sum
+		sourceColumn: appointment_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column patient_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 2e037b74-4c11-41a2-ab29-84976e7e62e4
+		summarizeBy: none
+		sourceColumn: patient_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column dentist_id
+		dataType: int64
+		formatString: 0
+		lineageTag: cd62f525-2e34-42df-86bf-ada94c882591
+		summarizeBy: none
+		sourceColumn: dentist_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column appointment_date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 1e26d317-4fd2-4611-9bf8-33cb8833a9ff
+		summarizeBy: none
+		sourceColumn: appointment_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column booked_date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 02d5cb4d-2555-4cc6-a21c-64b8fb48b0a5
+		summarizeBy: sum
+		sourceColumn: booked_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_updated_date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 8264c2e9-be08-4698-80eb-c60e83640f71
+		summarizeBy: sum
+		sourceColumn: status_updated_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column booked_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: c0d4c627-aa97-41cb-8701-b8f83ddec117
+		summarizeBy: none
+		sourceColumn: booked_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column scheduled_start_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 5d293664-c131-4258-9e67-8321def716aa
+		summarizeBy: none
+		sourceColumn: scheduled_start_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column scheduled_hour
+		dataType: int64
+		formatString: 0
+		lineageTag: 7dd2a9f8-d4a8-49c6-928a-573a90627b2a
+		summarizeBy: sum
+		sourceColumn: scheduled_hour
+
+		annotation SummarizationSetBy = Automatic
+
+	column planned_duration_min
+		dataType: int64
+		formatString: 0
+		lineageTag: d3171fa2-0717-4b34-99eb-35af01255e74
+		summarizeBy: sum
+		sourceColumn: planned_duration_min
+
+		annotation SummarizationSetBy = Automatic
+
+	column visit_type
+		dataType: string
+		lineageTag: fd20f551-2c94-4ed4-9637-9c1e1561105d
+		summarizeBy: none
+		sourceColumn: visit_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column booking_channel
+		dataType: string
+		lineageTag: 1fa4f2f2-3f8b-4f91-af0f-2217b6a2c7d1
+		summarizeBy: none
+		sourceColumn: booking_channel
+
+		annotation SummarizationSetBy = Automatic
+
+	column status
+		dataType: string
+		lineageTag: 00eee7f1-e543-49d5-afbd-f1e17001e8b2
+		summarizeBy: none
+		sourceColumn: status
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_updated_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 69ff65e6-a50d-47ca-983b-bdb54632e3fe
+		summarizeBy: none
+		sourceColumn: status_updated_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column reminder_sent
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: a2a8daf9-6785-4df7-9877-8c71c5fccb7c
+		summarizeBy: none
+		sourceColumn: reminder_sent
+
+		annotation SummarizationSetBy = Automatic
+
+	column check_in_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: eafa7281-37b0-4608-88ac-c9b049198234
+		summarizeBy: none
+		sourceColumn: check_in_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column chair_start_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 8066012a-a16f-43e8-b92d-3d341690d16b
+		summarizeBy: none
+		sourceColumn: chair_start_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column chair_end_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 10348eaa-5b7b-441c-9f3b-da80fbef4146
+		summarizeBy: none
+		sourceColumn: chair_end_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column checkout_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 0ea25845-adc0-46f7-964d-d107e3415e52
+		summarizeBy: none
+		sourceColumn: checkout_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_change_reason
+		dataType: string
+		lineageTag: c4bcd9d7-6a69-4998-8e18-1f43c07b9de0
+		summarizeBy: none
+		sourceColumn: status_change_reason
+
+		annotation SummarizationSetBy = Automatic
+
+	column rescheduled_from_appointment_id
+		dataType: int64
+		formatString: 0
+		lineageTag: ca40270e-56a8-4e82-b53d-60647362fc78
+		summarizeBy: sum
+		sourceColumn: rescheduled_from_appointment_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column appointment_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 4bdb9520-5e06-4ed2-ac2d-1a791d230955
+		summarizeBy: sum
+		sourceColumn: appointment_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column completed_appointment_count
+		dataType: int64
+		formatString: 0
+		lineageTag: f4287438-b24e-444d-9942-16aea1753821
+		summarizeBy: sum
+		sourceColumn: completed_appointment_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column no_show_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 07c82f7b-2627-4821-9cc5-73d95996362d
+		summarizeBy: sum
+		sourceColumn: no_show_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column cancelled_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 4e118b42-b3ba-4bf4-9475-c01c5d917637
+		summarizeBy: sum
+		sourceColumn: cancelled_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column rescheduled_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 7c5f26a9-a07e-449f-9076-8bdc73497270
+		summarizeBy: sum
+		sourceColumn: rescheduled_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column non_completed_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 8e2ad724-594c-4f9e-9ccd-0443ca833c7e
+		summarizeBy: sum
+		sourceColumn: non_completed_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column booking_lead_minutes
+		dataType: int64
+		formatString: 0
+		lineageTag: 64ca0c88-e5fd-4633-996a-f5692dcb5474
+		summarizeBy: sum
+		sourceColumn: booking_lead_minutes
+
+		annotation SummarizationSetBy = Automatic
+
+	column patient_wait_minutes
+		dataType: int64
+		formatString: 0
+		lineageTag: e3ac6d9c-df21-420e-af40-518e1c037019
+		summarizeBy: sum
+		sourceColumn: patient_wait_minutes
+
+		annotation SummarizationSetBy = Automatic
+
+	column actual_chair_minutes
+		dataType: int64
+		formatString: 0
+		lineageTag: 8fd0d960-c160-438e-ba3e-5e3b7015ed97
+		summarizeBy: sum
+		sourceColumn: actual_chair_minutes
+
+		annotation SummarizationSetBy = Automatic
+
+	column checkout_delay_minutes
+		dataType: int64
+		formatString: 0
+		lineageTag: 1ccc7cab-81eb-4fa3-bcd8-cb8871ebebe5
+		summarizeBy: sum
+		sourceColumn: checkout_delay_minutes
+
+		annotation SummarizationSetBy = Automatic
+
+	column schedule_variance_minutes
+		dataType: int64
+		formatString: 0
+		lineageTag: 8012dd14-244b-4b25-91ad-8c6fd9fa1c8f
+		summarizeBy: sum
+		sourceColumn: schedule_variance_minutes
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_notice_minutes
+		dataType: int64
+		formatString: 0
+		lineageTag: 2556440c-a756-45a1-b707-1cf22a19f384
+		summarizeBy: sum
+		sourceColumn: status_notice_minutes
+
+		annotation SummarizationSetBy = Automatic
+
+	column approximate_age_at_appointment
+		dataType: int64
+		formatString: 0
+		lineageTag: cf4a89a8-ba95-4a3b-9c0f-4d41713f71bf
+		summarizeBy: sum
+		sourceColumn: approximate_age_at_appointment
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_appointments = m
+		mode: import
+		source =
+				let
+				    Source = fnLoadCsv("fact_appointments.csv"),
+				    ChangedType = Table.TransformColumnTypes(
+				        Source,
+				        {
+				            {"appointment_id", Int64.Type},
+				            {"patient_id", Int64.Type},
+				            {"dentist_id", Int64.Type},
+				            {"appointment_date_key", Int64.Type},
+				            {"booked_date_key", Int64.Type},
+				            {"status_updated_date_key", Int64.Type},
+				            {"booked_at", type datetime},
+				            {"scheduled_start_at", type datetime},
+				            {"scheduled_hour", Int64.Type},
+				            {"planned_duration_min", Int64.Type},
+				            {"visit_type", type text},
+				            {"booking_channel", type text},
+				            {"status", type text},
+				            {"status_updated_at", type datetime},
+				            {"reminder_sent", type logical},
+				            {"check_in_at", type datetime},
+				            {"chair_start_at", type datetime},
+				            {"chair_end_at", type datetime},
+				            {"checkout_at", type datetime},
+				            {"status_change_reason", type text},
+				            {"rescheduled_from_appointment_id", Int64.Type},
+				            {"appointment_count", Int64.Type},
+				            {"completed_appointment_count", Int64.Type},
+				            {"no_show_count", Int64.Type},
+				            {"cancelled_count", Int64.Type},
+				            {"rescheduled_count", Int64.Type},
+				            {"non_completed_count", Int64.Type},
+				            {"booking_lead_minutes", Int64.Type},
+				            {"patient_wait_minutes", Int64.Type},
+				            {"actual_chair_minutes", Int64.Type},
+				            {"checkout_delay_minutes", Int64.Type},
+				            {"schedule_variance_minutes", Int64.Type},
+				            {"status_notice_minutes", Int64.Type},
+				            {"approximate_age_at_appointment", Int64.Type}
+				        }
+				    )
+				in
+				    ChangedType
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

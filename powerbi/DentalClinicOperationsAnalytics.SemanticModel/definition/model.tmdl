@@ -1,0 +1,28 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	valueFilterBehavior: independent
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_ProTooling = ["DevMode"]
+
+annotation PBI_QueryOrder = ["ProcessedDataPath","fnLoadCsv","dim_date","dim_dentists","dim_patients","dim_procedures","fact_appointments","fact_procedures","fact_treatment_plan_items","fact_payments","fact_payment_allocations"]
+
+ref table dim_date
+ref table dim_dentists
+ref table dim_patients
+ref table dim_procedures
+ref table fact_appointments
+ref table fact_procedures
+ref table fact_treatment_plan_items
+ref table fact_payments
+ref table fact_payment_allocations
+ref table _Measures
+
+ref cultureInfo en-US
+
