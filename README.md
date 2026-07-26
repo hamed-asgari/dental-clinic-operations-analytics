@@ -6,7 +6,9 @@ The project uses only reproducible synthetic data and contains no real patient i
 
 ## Project status
 
-Version 0.3 — normalized data model, synthetic data pipeline, SQL Server workflow, core analytical queries, and exploratory data analysis completed.
+Version 0.4 - normalized source model, reproducible synthetic data,
+SQL Server workflow, exploratory analysis, and validated Power BI-ready
+processed datasets completed.
 
 ## Business problem
 
@@ -36,6 +38,10 @@ The repository currently supports:
 - Core operational and financial SQL queries
 - Treatment-plan-to-procedure linkage
 - Payment-to-procedure allocation analysis
+- A reproducible processed-data build for Power BI
+- Four conformed dimensions and five analytical fact tables
+- Chair-time, revenue, payment, and treatment-plan reconciliation
+- Post-write validation of processed CSV names, columns, and row counts
 
 ## Data model
 
@@ -55,6 +61,13 @@ Detailed field definitions and relationships are documented in:
 
 ```text
 docs/data_dictionary.md
+```
+
+The processed analytical model, Power BI relationships, grains,
+derived measures, and double-counting rules are documented in:
+
+```text
+docs/processed_data_model.md
 ```
 
 ## Default synthetic dataset
@@ -108,6 +121,7 @@ Additional analysis will cover patient retention, payment collection, utilizatio
 |   `-- processed/
 |-- docs/
 |   |-- data_dictionary.md
+|   |-- processed_data_model.md
 |   `-- project_charter.md
 |-- images/
 |-- notebooks/
@@ -118,6 +132,7 @@ Additional analysis will cover patient retention, payment collection, utilizatio
 |   |-- 01_schema.sql
 |   `-- 02_analytics_queries.sql
 |-- src/
+|   |-- build_processed_datasets.py
 |   |-- generate_synthetic_data.py
 |   `-- load_csv_to_sql_server.py
 |-- .gitignore
@@ -148,7 +163,25 @@ The generated CSV files are written to:
 data/raw/
 ```
 
-### 3. Create the SQL Server test database
+### 3. Build the processed analytical datasets
+
+```powershell
+python src\build_processed_datasets.py
+```
+
+The build creates four conformed dimensions and five analytical fact
+tables for direct import into Power BI. It validates keys, row counts,
+relationships, appointment and procedure chair time, procedure
+revenue, payment allocations, treatment-plan linkage, net cash, and
+the written CSV structure.
+
+The processed files are written to:
+
+```text
+data/processed/
+```
+
+### 4. Create the SQL Server test database
 
 The following commands use Windows integrated authentication:
 
@@ -156,7 +189,7 @@ The following commands use Windows integrated authentication:
 sqlcmd -S localhost -E -Q "IF DB_ID('DentalClinicAnalytics_Test') IS NULL CREATE DATABASE DentalClinicAnalytics_Test;"
 ```
 
-### 4. Create the database schema
+### 5. Create the database schema
 
 ```powershell
 sqlcmd -S localhost -E -d DentalClinicAnalytics_Test -b -i sql\01_schema.sql
@@ -164,7 +197,7 @@ sqlcmd -S localhost -E -d DentalClinicAnalytics_Test -b -i sql\01_schema.sql
 
 The schema script creates all tables, primary keys, foreign keys, validation constraints, and indexes.
 
-### 5. Load the CSV data into SQL Server
+### 6. Load the CSV data into SQL Server
 
 ```powershell
 python src\load_csv_to_sql_server.py
@@ -185,7 +218,7 @@ A different server, database, driver, or data directory can be supplied through 
 python src\load_csv_to_sql_server.py --help
 ```
 
-### 6. Run the analytical SQL queries
+### 7. Run the analytical SQL queries
 
 ```powershell
 sqlcmd -S localhost -E -d DentalClinicAnalytics_Test -b -i sql\02_analytics_queries.sql
@@ -224,7 +257,7 @@ The project validates several important relationships, including:
 - [x] Implement the first core analytical queries
 - [ ] Expand the analytical SQL query library
 - [x] Complete exploratory data analysis with Python
-- [ ] Create processed analytical datasets
+- [x] Create processed analytical datasets
 - [ ] Build the Power BI data model
 - [ ] Develop the first Power BI dashboard
 - [ ] Document findings and management recommendations
