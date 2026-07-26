@@ -6,9 +6,9 @@ The project uses only reproducible synthetic data and contains no real patient i
 
 ## Project status
 
-Version 0.4 - normalized source model, reproducible synthetic data,
-SQL Server workflow, exploratory analysis, and validated Power BI-ready
-processed datasets completed.
+Version 0.5 - normalized source model, reproducible synthetic data,
+SQL Server workflow, exploratory analysis, validated processed datasets,
+and a validated Power BI semantic model completed.
 
 ## Business problem
 
@@ -258,6 +258,6 @@ The project validates several important relationships, including:
 - [ ] Expand the analytical SQL query library
 - [x] Complete exploratory data analysis with Python
 - [x] Create processed analytical datasets
-- [ ] Build the Power BI data model
+- [x] Build the Power BI data model
 - [ ] Develop the first Power BI dashboard
 - [ ] Document findings and management recommendations

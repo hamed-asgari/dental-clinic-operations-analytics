@@ -1,0 +1,320 @@
+table fact_procedures
+	lineageTag: b492a175-19b2-4d7d-9821-e09f313f67d7
+
+	column appointment_procedure_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 94aebdba-6b06-46a1-901c-872416aa5d42
+		summarizeBy: sum
+		sourceColumn: appointment_procedure_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column appointment_id
+		dataType: int64
+		formatString: 0
+		lineageTag: e86b87bf-34f7-4384-bf62-8cc9a1462c7c
+		summarizeBy: sum
+		sourceColumn: appointment_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column plan_item_id
+		dataType: int64
+		formatString: 0
+		lineageTag: eaf04220-be16-4a25-9255-1a21ac6a6971
+		summarizeBy: sum
+		sourceColumn: plan_item_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column patient_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 21d43299-122f-43dc-801c-3b25b80ba6cf
+		summarizeBy: none
+		sourceColumn: patient_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column dentist_id
+		dataType: int64
+		formatString: 0
+		lineageTag: fddb25d1-8938-4ddc-b565-a6e28d7bdcf3
+		summarizeBy: none
+		sourceColumn: dentist_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column procedure_code
+		dataType: string
+		lineageTag: 25351baf-297d-42f9-bd16-20e993e0589c
+		summarizeBy: none
+		sourceColumn: procedure_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column appointment_date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 2692f305-026b-456a-b625-bb2d66043e9a
+		summarizeBy: none
+		sourceColumn: appointment_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column tooth_code
+		dataType: string
+		lineageTag: 536dae84-32ef-4416-826b-08337b5c4d73
+		summarizeBy: none
+		sourceColumn: tooth_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: b9d607e6-5b6a-46f8-9dc1-39afbe435a98
+		summarizeBy: sum
+		sourceColumn: quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column completion_status
+		dataType: string
+		lineageTag: 535c7b45-76f6-4c82-a391-b97214e2f977
+		summarizeBy: none
+		sourceColumn: completion_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column procedure_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 8f886259-a66b-48ba-9f02-4cdead9762d7
+		summarizeBy: sum
+		sourceColumn: procedure_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column completed_procedure_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 94613784-2b7f-4250-861f-aa564659811e
+		summarizeBy: sum
+		sourceColumn: completed_procedure_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column partially_completed_procedure_count
+		dataType: int64
+		formatString: 0
+		lineageTag: bd265645-4760-474f-a7f1-04a4773fa380
+		summarizeBy: sum
+		sourceColumn: partially_completed_procedure_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column discontinued_procedure_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 0f25d7e3-288e-4399-8416-f423b4835c3d
+		summarizeBy: sum
+		sourceColumn: discontinued_procedure_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column linked_to_plan_item_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 009b53eb-8daa-4957-8bc4-c910ddbe5a3e
+		summarizeBy: sum
+		sourceColumn: linked_to_plan_item_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column duration_weight
+		dataType: double
+		lineageTag: 53b5237c-ffed-43b2-9fd1-8e1124dea525
+		summarizeBy: sum
+		sourceColumn: duration_weight
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column allocated_chair_minutes
+		dataType: double
+		lineageTag: cb25be39-bcba-4169-acda-a2bb67e6f2de
+		summarizeBy: sum
+		sourceColumn: allocated_chair_minutes
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column allocated_chair_hours
+		dataType: double
+		lineageTag: 1504f0ee-1a6e-4c00-93ef-8bc0b4668ce6
+		summarizeBy: sum
+		sourceColumn: allocated_chair_hours
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column fee_amount
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: f876cac2-8721-42e3-861f-e443e3298abd
+		summarizeBy: sum
+		sourceColumn: fee_amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column discount_amount
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 78dc8331-d6e2-4f1b-a084-640dbf9e6cb3
+		summarizeBy: sum
+		sourceColumn: discount_amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column net_revenue
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 462558af-54d0-437f-bbdc-9b4aa0b99143
+		summarizeBy: sum
+		sourceColumn: net_revenue
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column direct_cost
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: f39d5a47-4e3a-4105-bd46-58379111d74d
+		summarizeBy: sum
+		sourceColumn: direct_cost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column direct_margin
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 872ffec2-8593-4e40-9547-6ebceae6455c
+		summarizeBy: sum
+		sourceColumn: direct_margin
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column standard_fee_total
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: afa21687-6777-476d-b37b-7035e4ff962e
+		summarizeBy: sum
+		sourceColumn: standard_fee_total
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column standard_direct_cost_total
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 2c013b9e-0d89-4306-af4e-3152a3ae011a
+		summarizeBy: sum
+		sourceColumn: standard_direct_cost_total
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column fee_variance_from_standard
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 3489edca-124e-4f8e-b867-dc79dccb0c44
+		summarizeBy: sum
+		sourceColumn: fee_variance_from_standard
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column allocated_amount_total
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 5464f454-cef0-4862-aec5-59a3d99c10f6
+		summarizeBy: sum
+		sourceColumn: allocated_amount_total
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column outstanding_balance
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 524baa90-e782-4ca9-bbf1-634f4f3450d6
+		summarizeBy: sum
+		sourceColumn: outstanding_balance
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	partition fact_procedures = m
+		mode: import
+		source =
+				let
+				    Source = fnLoadCsv("fact_procedures.csv"),
+				    ChangedType = Table.TransformColumnTypes(
+				        Source,
+				        {
+				            {"appointment_procedure_id", Int64.Type},
+				            {"appointment_id", Int64.Type},
+				            {"plan_item_id", Int64.Type},
+				            {"patient_id", Int64.Type},
+				            {"dentist_id", Int64.Type},
+				            {"procedure_code", type text},
+				            {"appointment_date_key", Int64.Type},
+				            {"tooth_code", type text},
+				            {"quantity", Int64.Type},
+				            {"completion_status", type text},
+				            {"procedure_count", Int64.Type},
+				            {"completed_procedure_count", Int64.Type},
+				            {"partially_completed_procedure_count", Int64.Type},
+				            {"discontinued_procedure_count", Int64.Type},
+				            {"linked_to_plan_item_count", Int64.Type},
+				            {"duration_weight", type number},
+				            {"allocated_chair_minutes", type number},
+				            {"allocated_chair_hours", type number},
+				            {"fee_amount", Currency.Type},
+				            {"discount_amount", Currency.Type},
+				            {"net_revenue", Currency.Type},
+				            {"direct_cost", Currency.Type},
+				            {"direct_margin", Currency.Type},
+				            {"standard_fee_total", Currency.Type},
+				            {"standard_direct_cost_total", Currency.Type},
+				            {"fee_variance_from_standard", Currency.Type},
+				            {"allocated_amount_total", Currency.Type},
+				            {"outstanding_balance", Currency.Type}
+				        }
+				    )
+				in
+				    ChangedType
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

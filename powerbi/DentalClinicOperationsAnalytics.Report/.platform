@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "DentalClinicOperationsAnalytics"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "48617af9-52a5-4a42-94a6-cf63cb54325d"
+  }
+}

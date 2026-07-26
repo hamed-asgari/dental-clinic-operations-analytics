@@ -2,8 +2,8 @@
 
 ## Current status
 
-The processed analytical datasets are complete and validated. The
-Power BI semantic model and dashboard have not been built yet.
+The processed analytical datasets and Power BI semantic model are
+complete and validated. Dashboard development has not started yet.
 
 Rebuild the Power BI source files with:
 
@@ -23,6 +23,27 @@ keys, measure ownership, and double-counting rules are documented in:
 ```text
 docs/processed_data_model.md
 ```
+
+## Open the Power BI project
+
+Open:
+
+```text
+powerbi/DentalClinicOperationsAnalytics.pbip
+```
+
+Before refreshing the model on another computer, update the
+`ProcessedDataPath` Power Query parameter so that it points to the
+local `data/processed/` directory.
+
+The semantic model contains:
+
+- Four conformed dimensions
+- Five analytical fact tables
+- One dedicated measures table
+- Twenty-three validated relationships
+- Twenty-three validated DAX measures
+- A marked date table with configured sort columns
 
 ## Modeling guardrails
 

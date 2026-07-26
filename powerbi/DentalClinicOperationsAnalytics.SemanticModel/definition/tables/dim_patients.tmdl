@@ -1,0 +1,104 @@
+table dim_patients
+	lineageTag: 44d2cd9a-6355-4b72-a193-78cd394efc0a
+
+	column patient_id
+		dataType: int64
+		formatString: 0
+		lineageTag: f013d237-12c3-428c-b133-2742f9b09158
+		summarizeBy: none
+		sourceColumn: patient_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column birth_year
+		dataType: int64
+		formatString: 0
+		lineageTag: fde7cf13-4221-4622-8ac1-50689973c00d
+		summarizeBy: sum
+		sourceColumn: birth_year
+
+		annotation SummarizationSetBy = Automatic
+
+	column sex
+		dataType: string
+		lineageTag: b3dd7b73-0787-4750-8013-ba4f79f46a1b
+		summarizeBy: none
+		sourceColumn: sex
+
+		annotation SummarizationSetBy = Automatic
+
+	column city_area
+		dataType: string
+		lineageTag: 64c18bb8-f704-4f42-8426-1c299247f8a9
+		summarizeBy: none
+		sourceColumn: city_area
+
+		annotation SummarizationSetBy = Automatic
+
+	column registered_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 98b63460-4b4c-4308-9b91-7897b6f40cf5
+		summarizeBy: none
+		sourceColumn: registered_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column insurance_type
+		dataType: string
+		lineageTag: 972456db-b932-43ef-9eea-54d97e711200
+		summarizeBy: none
+		sourceColumn: insurance_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column referral_source
+		dataType: string
+		lineageTag: b221d140-1a5a-4bb2-9ade-7cfe01954b9a
+		summarizeBy: none
+		sourceColumn: referral_source
+
+		annotation SummarizationSetBy = Automatic
+
+	column preferred_contact_channel
+		dataType: string
+		lineageTag: f7fb9364-984c-4e4b-89e9-67fd06e1a8cd
+		summarizeBy: none
+		sourceColumn: preferred_contact_channel
+
+		annotation SummarizationSetBy = Automatic
+
+	column patient_status
+		dataType: string
+		lineageTag: 7e998be7-5232-421a-b9c7-4baa03d6aad2
+		summarizeBy: none
+		sourceColumn: patient_status
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_patients = m
+		mode: import
+		source =
+				let
+				    Source = fnLoadCsv("dim_patients.csv"),
+				    ChangedType = Table.TransformColumnTypes(
+				        Source,
+				        {
+				            {"patient_id", Int64.Type},
+				            {"birth_year", Int64.Type},
+				            {"sex", type text},
+				            {"city_area", type text},
+				            {"registered_at", type datetime},
+				            {"insurance_type", type text},
+				            {"referral_source", type text},
+				            {"preferred_contact_channel", type text},
+				            {"patient_status", type text}
+				        }
+				    )
+				in
+				    ChangedType
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,174 @@
+table dim_date
+	lineageTag: 70632de8-c973-4feb-93b0-c8bb3023ba5d
+	dataCategory: Time
+
+	column date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 60feb9b1-e887-4010-b15e-84a2eac48d1a
+		summarizeBy: none
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column date
+		dataType: dateTime
+		isKey
+		formatString: Long Date
+		lineageTag: 3cbe5828-61ec-4647-bc4f-0d94eb289267
+		summarizeBy: none
+		sourceColumn: date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column year
+		dataType: int64
+		formatString: 0
+		lineageTag: 334b7f3b-629e-4965-83bf-280ba258bdfd
+		summarizeBy: sum
+		sourceColumn: year
+
+		annotation SummarizationSetBy = Automatic
+
+	column quarter_number
+		dataType: int64
+		formatString: 0
+		lineageTag: 71f5acff-c2d3-43cd-bbe0-6ebe21085097
+		summarizeBy: sum
+		sourceColumn: quarter_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column quarter
+		dataType: string
+		lineageTag: 7c07fd10-140d-442a-9b01-91e76c1b8395
+		summarizeBy: none
+		sourceColumn: quarter
+		sortByColumn: quarter_number
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_number
+		dataType: int64
+		formatString: 0
+		lineageTag: 2ce3e31b-3477-4de1-ba0b-ef5530ccbcf8
+		summarizeBy: sum
+		sourceColumn: month_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_name
+		dataType: string
+		lineageTag: 88a4f76f-51e4-4d08-bb93-770eeeff1053
+		summarizeBy: none
+		sourceColumn: month_name
+		sortByColumn: month_number
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_short_name
+		dataType: string
+		lineageTag: e3bfcebb-d3e4-432d-890e-bb99841a1e84
+		summarizeBy: none
+		sourceColumn: month_short_name
+		sortByColumn: month_number
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column year_month
+		dataType: string
+		lineageTag: 52a350d5-46ee-4b3d-b099-10d92aa8da92
+		summarizeBy: none
+		sourceColumn: year_month
+		sortByColumn: year_month_sort
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column year_month_sort
+		dataType: int64
+		formatString: 0
+		lineageTag: f91838f2-ec24-4f1d-9c81-ebff8326346b
+		summarizeBy: sum
+		sourceColumn: year_month_sort
+
+		annotation SummarizationSetBy = Automatic
+
+	column week_of_year
+		dataType: int64
+		formatString: 0
+		lineageTag: 288cc8d0-97ea-40e3-af3a-d40caaed3edf
+		summarizeBy: sum
+		sourceColumn: week_of_year
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_of_month
+		dataType: int64
+		formatString: 0
+		lineageTag: cc9662c4-4590-4136-aaed-ccfeb4f74752
+		summarizeBy: sum
+		sourceColumn: day_of_month
+
+		annotation SummarizationSetBy = Automatic
+
+	column weekday_number
+		dataType: int64
+		formatString: 0
+		lineageTag: 153bb1e2-9cd5-4f3c-952b-8e20fa41c462
+		summarizeBy: sum
+		sourceColumn: weekday_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column weekday_name
+		dataType: string
+		lineageTag: 66d25c60-0ab5-482a-89dd-47d1dcbb04af
+		summarizeBy: none
+		sourceColumn: weekday_name
+		sortByColumn: weekday_number
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_date = m
+		mode: import
+		source =
+				let
+				    Source = fnLoadCsv("dim_date.csv"),
+				    ChangedType = Table.TransformColumnTypes(
+				        Source,
+				        {
+				            {"date_key", Int64.Type},
+				            {"date", type date},
+				            {"year", Int64.Type},
+				            {"quarter_number", Int64.Type},
+				            {"quarter", type text},
+				            {"month_number", Int64.Type},
+				            {"month_name", type text},
+				            {"month_short_name", type text},
+				            {"year_month", type text},
+				            {"year_month_sort", Int64.Type},
+				            {"week_of_year", Int64.Type},
+				            {"day_of_month", Int64.Type},
+				            {"weekday_number", Int64.Type},
+				            {"weekday_name", type text}
+				        }
+				    )
+				in
+				    ChangedType
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
