@@ -229,6 +229,23 @@ table _Measures
 		formatString: 0.0%;-0.0%;0.0%
 		lineageTag: 3d248e1a-bfe8-4051-aa56-8ad211e6a337
 
+	measure 'Allocated Procedure Chair Hours' =
+			
+			SUM ( fact_procedures[allocated_chair_hours] )
+		formatString: #,0.0
+		lineageTag: c63fcfb2-a487-43ab-9023-442ff1cb602d
+
+	measure 'Revenue per Allocated Procedure Chair Hour' =
+			
+			DIVIDE (
+			    [Net Procedure Revenue],
+			    [Allocated Procedure Chair Hours]
+			)
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 89dee480-2b4b-41a9-aee8-41aab43a3103
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
 	column Value
 		isHidden
 		formatString: 0
