@@ -1,9 +1,12 @@
-# Power BI dashboard plan
+# Power BI report
 
 ## Current status
 
-The processed analytical datasets and Power BI semantic model are
-complete and validated. Dashboard development has not started yet.
+The processed analytical datasets, Power BI semantic model, and
+three-page Power BI operations report are complete and validated.
+
+The report includes synchronized reporting-period slicers across all
+pages and uses Executive Overview as the default landing page.
 
 Rebuild the Power BI source files with:
 
@@ -11,7 +14,7 @@ Rebuild the Power BI source files with:
 python src\build_processed_datasets.py
 ```
 
-Import all nine CSV files from:
+The semantic model reads all nine processed CSV files from:
 
 ```text
 data/processed/
@@ -42,7 +45,7 @@ The semantic model contains:
 - Five analytical fact tables
 - One dedicated measures table
 - Twenty-three validated relationships
-- Twenty-three validated DAX measures
+- Twenty-five validated DAX measures
 - A marked date table with configured sort columns
 
 ## Modeling guardrails
@@ -64,31 +67,58 @@ The semantic model contains:
   The data contains typical weekly dentist hours, not a detailed chair
   availability schedule.
 
-## Planned dashboard pages
+## Report pages
 
-Create three pages:
+Each report page uses a consistent 16:9 layout with a page title,
+subtitle, synchronized reporting-period slicer, six KPI cards, and four
+analytical charts.
 
-## 1. Executive overview
-- Appointments
-- Completed visits
-- No-show rate
-- Cancellation rate
+### 1. Executive Overview
+
+- Appointments and completed visits
+- No-show and cancellation rates
 - Net procedure revenue
-- Net procedure revenue per actual chair hour
+- Revenue per actual chair hour
+- Appointment and net-revenue trends
+- No-show and cancellation trends
+- Top procedure groups by net revenue
 
-## 2. Scheduling and capacity
-- Appointment status by month
-- No-show by weekday and hour
-- Planned versus actual duration
-- Actual chair hours by dentist
-- Scheduled-hours utilization estimate by dentist
-- Lead time and no-show relationship
+### 2. Scheduling & Capacity
 
-## 3. Treatment and finance
-- Procedure mix
-- Revenue and direct margin by procedure group
-- Treatment-plan acceptance
-- Payment collection rate based on allocated completed inflows
-- Referral-source performance
+- Appointments and completed visits
+- No-show and cancellation rates
+- Planned and actual chair hours
+- Appointment volume trend
+- Planned versus actual chair-hour trend
+- No-show and cancellation trends
+- Appointment volume by weekday
 
-Export dashboard screenshots to `images/` before publishing the repository.
+### 3. Treatment & Finance
+
+- Procedure volume
+- Treatment-plan acceptance rate
+- Payment collection rate
+- Direct margin and net procedure revenue
+- Revenue per allocated procedure chair hour
+- Procedure-volume and net-revenue trends
+- Procedure-group revenue and chair-hour efficiency comparisons
+
+## Cross-page behavior
+
+- The reporting-period slicer is synchronized across all three pages.
+- Filter selections remain active while navigating between pages.
+- Executive Overview is configured as the default landing page.
+- All pages use a consistent visual design system and report layout.
+
+## Modeling notes
+
+- Appointment-level chair hours are used for clinic-wide operational
+  efficiency.
+- Allocated procedure chair hours are used for procedure-group revenue
+  efficiency.
+- Payment collection is calculated from allocated completed inflows.
+- Scheduled-hours utilization remains an estimate because the source
+  data does not contain a detailed chair-availability schedule.
+
+Report screenshots should be exported to `../images/` before the final
+portfolio release.

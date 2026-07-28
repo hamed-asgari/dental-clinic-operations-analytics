@@ -6,9 +6,10 @@ The project uses only reproducible synthetic data and contains no real patient i
 
 ## Project status
 
-Version 0.5 - normalized source model, reproducible synthetic data,
+Version 0.6 - normalized source model, reproducible synthetic data,
 SQL Server workflow, exploratory analysis, validated processed datasets,
-and a validated Power BI semantic model completed.
+a validated Power BI semantic model, and a three-page Power BI operations
+report completed.
 
 ## Business problem
 
@@ -42,6 +43,11 @@ The repository currently supports:
 - Four conformed dimensions and five analytical fact tables
 - Chair-time, revenue, payment, and treatment-plan reconciliation
 - Post-write validation of processed CSV names, columns, and row counts
+- A validated Power BI semantic model with four dimensions, five fact tables, and a dedicated measures table
+- A three-page Power BI report covering executive, scheduling, capacity, treatment, and financial performance
+- Synchronized reporting-period slicers across all report pages
+- Procedure-level revenue efficiency using allocated procedure chair hours
+- Consistent KPI cards, trend analysis, weekday scheduling analysis, and procedure-group comparisons
 
 ## Data model
 
@@ -98,7 +104,42 @@ The current SQL queries examine:
 - Revenue and direct margin by procedure group
 - Treatment-plan acceptance by item count and proposed value
 
-Additional analysis will cover patient retention, payment collection, utilization, procedure mix, and revenue per clinical hour.
+The Power BI report extends this analysis with appointment trends,
+planned-versus-actual chair hours, weekday scheduling patterns,
+treatment-plan acceptance, payment collection, procedure mix, direct
+margin, and revenue per allocated procedure chair hour. Patient
+retention remains a potential area for future analysis.
+
+## Power BI report
+
+Open the Power BI project from:
+
+```text
+powerbi/DentalClinicOperationsAnalytics.pbip
+```
+
+The report contains three pages:
+
+1. **Executive Overview**
+   - Core appointment, attendance, revenue, and chair-hour KPIs
+   - Appointment and net-revenue trends
+   - No-show and cancellation trends
+   - Top procedure groups by net revenue
+
+2. **Scheduling & Capacity**
+   - Appointment and attendance KPIs
+   - Planned versus actual chair hours
+   - No-show and cancellation trends
+   - Appointment volume by weekday
+
+3. **Treatment & Finance**
+   - Procedure volume, treatment-plan acceptance, and collection KPIs
+   - Net revenue and direct margin
+   - Procedure and revenue trends
+   - Procedure-group revenue and chair-hour efficiency comparisons
+
+The reporting-period slicer is synchronized across all three pages, and
+the Executive Overview is configured as the default landing page.
 
 ## Technology stack
 
@@ -127,6 +168,9 @@ Additional analysis will cover patient retention, payment collection, utilizatio
 |-- notebooks/
 |   `-- 01_eda.ipynb
 |-- powerbi/
+|   |-- DentalClinicOperationsAnalytics.Report/
+|   |-- DentalClinicOperationsAnalytics.SemanticModel/
+|   |-- DentalClinicOperationsAnalytics.pbip
 |   `-- README.md
 |-- sql/
 |   |-- 01_schema.sql
@@ -224,6 +268,14 @@ python src\load_csv_to_sql_server.py --help
 sqlcmd -S localhost -E -d DentalClinicAnalytics_Test -b -i sql\02_analytics_queries.sql
 ```
 
+### 8. Open the Power BI report
+
+Open `powerbi/DentalClinicOperationsAnalytics.pbip` in Power BI Desktop.
+
+Before refreshing the semantic model on another computer, update the
+`ProcessedDataPath` Power Query parameter so that it points to the local
+`data/processed/` directory.
+
 ## Data integrity
 
 The project validates several important relationships, including:
@@ -259,5 +311,5 @@ The project validates several important relationships, including:
 - [x] Complete exploratory data analysis with Python
 - [x] Create processed analytical datasets
 - [x] Build the Power BI data model
-- [ ] Develop the first Power BI dashboard
+- [x] Develop the first Power BI report
 - [ ] Document findings and management recommendations
