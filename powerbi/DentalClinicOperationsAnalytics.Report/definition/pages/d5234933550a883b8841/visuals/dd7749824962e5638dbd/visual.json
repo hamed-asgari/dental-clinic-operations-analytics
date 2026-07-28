@@ -297,6 +297,11 @@
         }
       ]
     },
+    "syncGroup": {
+      "groupName": "ReportingPeriodSync",
+      "fieldChanges": false,
+      "filterChanges": true
+    },
     "drillFilterOtherVisuals": true
   }
 }

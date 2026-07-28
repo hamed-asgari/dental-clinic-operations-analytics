@@ -297,24 +297,11 @@
         }
       ]
     },
+    "syncGroup": {
+      "groupName": "ReportingPeriodSync",
+      "fieldChanges": false,
+      "filterChanges": true
+    },
     "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "7383341e662b4b0984a6",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "dim_date"
-              }
-            },
-            "Property": "date"
-          }
-        },
-        "type": "Categorical"
-      }
-    ]
   }
 }
