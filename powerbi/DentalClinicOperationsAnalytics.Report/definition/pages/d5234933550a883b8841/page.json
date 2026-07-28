@@ -1,11 +1,33 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
-  "name": "40af8c34710e0ccd6252",
+  "name": "d5234933550a883b8841",
   "displayName": "Scheduling & Capacity",
   "displayOption": "FitToPage",
   "height": 720,
   "width": 1280,
+  "pageBinding": {
+    "name": "a175d5f05380339c2904",
+    "type": "Default",
+    "parameters": []
+  },
   "objects": {
+    "outspace": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#F5F7FA'"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ],
     "background": [
       {
         "properties": {
@@ -24,23 +46,6 @@
             "expr": {
               "Literal": {
                 "Value": "0D"
-              }
-            }
-          }
-        }
-      }
-    ],
-    "outspace": [
-      {
-        "properties": {
-          "color": {
-            "solid": {
-              "color": {
-                "expr": {
-                  "Literal": {
-                    "Value": "'#F5F7FA'"
-                  }
-                }
               }
             }
           }
