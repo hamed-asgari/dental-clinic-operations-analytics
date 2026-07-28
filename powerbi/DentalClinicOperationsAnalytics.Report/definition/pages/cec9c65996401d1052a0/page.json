@@ -1,11 +1,33 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
-  "name": "1fcca7a2a6410b9a4d47",
+  "name": "cec9c65996401d1052a0",
   "displayName": "Treatment & Finance",
   "displayOption": "FitToPage",
   "height": 720,
   "width": 1280,
+  "pageBinding": {
+    "name": "104ed4560960ea45900e",
+    "type": "Default",
+    "parameters": []
+  },
   "objects": {
+    "outspace": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#F5F7FA'"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ],
     "background": [
       {
         "properties": {
@@ -24,23 +46,6 @@
             "expr": {
               "Literal": {
                 "Value": "0D"
-              }
-            }
-          }
-        }
-      }
-    ],
-    "outspace": [
-      {
-        "properties": {
-          "color": {
-            "solid": {
-              "color": {
-                "expr": {
-                  "Literal": {
-                    "Value": "'#F5F7FA'"
-                  }
-                }
               }
             }
           }
