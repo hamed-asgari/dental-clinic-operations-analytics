@@ -277,12 +277,14 @@ The default synthetic dataset currently reconciles to:
 | Non-completed appointments | 2,064 |
 | Actual and allocated chair minutes | 275,569.00 |
 | Net procedure revenue | 776,623.23 |
-| Payment allocations | 706,056.86 |
+| Allocated completed inflows | 706,056.86 |
 | Procedure outstanding balance | 70,566.37 |
 | Net cash | 704,745.93 |
 | Unallocated completed inflow | 1,467.49 |
 | Accepted treatment-plan items | 2,001 |
 | Accepted items linked to completed procedures | 113 |
+| Decided treatment-plan items | 2,961 |
+| Treatment-plan acceptance rate | 67.58% |
 
 The values are synthetic validation benchmarks, not real clinic
 performance or market estimates.

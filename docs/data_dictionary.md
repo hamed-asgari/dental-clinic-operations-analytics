@@ -1,6 +1,7 @@
-# Data Dictionary - Draft 0.2
+# Data Dictionary - Version 1.0
 
-Review every field before generating the final dataset. Add clinical or operational fields only when they answer a defined question.
+This document defines the final raw-data fields, derived analytical
+metrics, and validation rules for Version 1.0.
 
 ## Design principles
 
@@ -63,9 +64,9 @@ The following variables should be calculated during analysis:
 
 - Completed appointments per dentist
 - Actual chair hours per dentist
-- Scheduled-hours utilization
+- Scheduled-hours utilization estimate
 - Net procedure revenue per dentist
-- Gross margin per dentist
+- Direct margin per dentist
 - Revenue per actual chair hour
 - Procedure mix per dentist
 - No-show rate per dentist
@@ -142,10 +143,10 @@ The following variables should be calculated during analysis rather than stored 
 The following variables should be calculated during analysis:
 
 - Net procedure revenue = fee amount minus discount amount
-- Gross margin = net procedure revenue minus direct cost
+- Direct margin = net procedure revenue minus direct cost
 - Total procedure revenue per appointment
 - Total direct cost per appointment
-- Revenue per actual chair minute
+- Revenue per allocated procedure chair hour
 - Procedure volume by procedure group
 - Procedure mix by dentist
 - Difference between the charged fee and the catalogue standard fee
@@ -185,8 +186,9 @@ The following variables should be calculated during analysis:
 - Net proposed item value = proposed fee amount minus proposed discount amount
 - Total proposed plan value = sum of net proposed values for all plan items
 - Accepted plan value = sum of net proposed values for accepted items
-- Plan acceptance rate by value = accepted plan value divided by total proposed plan value
-- Plan acceptance rate by item count
+- Decided proposed value = sum of net proposed values for non-pending items
+- Plan acceptance rate by value = accepted proposed value divided by decided proposed value
+- Plan acceptance rate by item count = accepted items divided by decided items
 - Time to patient decision = decision time minus proposal time
 - Time from acceptance to first completed procedure
 - Accepted-item completion rate
@@ -225,12 +227,12 @@ The following variables should be calculated during analysis:
 
 - Total payments received
 - Total refunds
-- Net cash received = completed payments minus completed refunds
-- Unallocated payment amount
+- Net cash received = completed payments and deposits minus completed refunds
+- Unallocated completed inflow amount
 - Amount paid per completed procedure
 - Outstanding balance per completed procedure
 - Outstanding balance per patient
-- Collection rate = allocated completed payments divided by net procedure revenue
+- Collection rate = allocated completed inflows divided by net procedure revenue
 - Average time from procedure completion to payment
 - Payment-method distribution
 - Installment-payment share
@@ -241,11 +243,12 @@ The following variables should be calculated during analysis:
 - The scheduled appointment time must not precede the booking time.
 - Check-in, chair-start, chair-end, and checkout timestamps must follow a logical chronological order.
 - Cancelled and rescheduled appointments should have a status-update timestamp.
-- Only completed appointments may contain completed appointment procedures.
+- Only completed appointments may contain appointment-procedure records.
 - Every appointment procedure must reference an active or historically valid procedure code.
 - A treatment-plan item decision time must not precede the treatment-plan proposal time.
-- A completed procedure linked to a treatment-plan item must match the procedure code of that item.
+- A performed procedure linked to a treatment-plan item must reference an accepted item and must match its procedure code.
 - Payment, deposit, and refund amounts must be positive; their financial direction is determined by transaction type.
-- The sum of allocations for a payment must not exceed the completed transaction amount.
+- Only completed payment and deposit transactions may have payment allocations.
+- The sum of allocations for a payment or deposit must not exceed its completed transaction amount.
 - An allocation must reference a completed appointment procedure.
 - All personally identifiable information is excluded because the dataset is fully synthetic.

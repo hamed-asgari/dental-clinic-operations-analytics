@@ -25,7 +25,7 @@ How can appointment, procedure, treatment-plan, and payment data be transformed 
 2. Relational database design.
 3. SQL analysis.
 4. Python exploratory analysis.
-5. Power BI dashboard.
+5. Power BI report.
 6. Short management report in English.
 
 ## Out of scope - version 1.0
@@ -39,7 +39,7 @@ How can appointment, procedure, treatment-plan, and payment data be transformed 
 - Reproducible data-generation script.
 - SQL schema and analytical queries.
 - EDA notebook.
-- Power BI dashboard file and screenshots.
+- Power BI report project and screenshots.
 - README and management summary.
 
 ## Success criteria
