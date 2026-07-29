@@ -8,6 +8,9 @@ three-page Power BI operations report are complete and validated.
 The report includes synchronized reporting-period slicers across all
 pages and uses Executive Overview as the default landing page.
 
+The final screenshots and management summary are included for the
+Version 1.0 portfolio release.
+
 Rebuild the Power BI source files with:
 
 ```powershell
@@ -120,5 +123,19 @@ analytical charts.
 - Scheduled-hours utilization remains an estimate because the source
   data does not contain a detailed chair-availability schedule.
 
-Report screenshots should be exported to `../images/` before the final
-portfolio release.
+## Final portfolio artifacts
+
+Final screenshots of all three report pages are stored in:
+
+```text
+images/executive_overview.png
+images/scheduling_capacity.png
+images/treatment_finance.png
+```
+
+The related management findings, limitations, and recommended actions
+are documented in:
+
+```text
+docs/management_summary.md
+```
