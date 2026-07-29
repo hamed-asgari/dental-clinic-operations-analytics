@@ -6,10 +6,11 @@ The project uses only reproducible synthetic data and contains no real patient i
 
 ## Project status
 
-Version 0.6 - normalized source model, reproducible synthetic data,
+Version 1.0 - normalized source model, reproducible synthetic data,
 SQL Server workflow, exploratory analysis, validated processed datasets,
-a validated Power BI semantic model, and a three-page Power BI operations
-report completed.
+an expanded ten-query SQL analytics library, a validated Power BI semantic
+model, a three-page Power BI operations report, final report screenshots,
+and documented management findings and recommendations.
 
 ## Business problem
 
@@ -36,7 +37,7 @@ The repository currently supports:
 - SQL Server table and constraint creation
 - Transactional loading of CSV data into SQL Server
 - Row-count validation after database loading
-- Core operational and financial SQL queries
+- Ten documented operational and financial SQL analyses
 - Treatment-plan-to-procedure linkage
 - Payment-to-procedure allocation analysis
 - A reproducible processed-data build for Power BI
@@ -48,6 +49,8 @@ The repository currently supports:
 - Synchronized reporting-period slicers across all report pages
 - Procedure-level revenue efficiency using allocated procedure chair hours
 - Consistent KPI cards, trend analysis, weekday scheduling analysis, and procedure-group comparisons
+- Final screenshots for all three Power BI report pages
+- A management summary documenting findings, limitations, and recommended actions
 
 ## Data model
 
@@ -102,13 +105,27 @@ The current SQL queries examine:
 - No-show rate by reminder status
 - Monthly chair-time performance by dentist
 - Revenue and direct margin by procedure group
-- Treatment-plan acceptance by item count and proposed value
+- Treatment-plan acceptance by plan status
+- Appointment non-completion by weekday
+- No-show rate by booking lead-time band
+- Revenue efficiency by procedure group using allocated chair time
+- Treatment-plan acceptance by patient insurance type
+- Operational and financial performance by referral source
 
 The Power BI report extends this analysis with appointment trends,
 planned-versus-actual chair hours, weekday scheduling patterns,
 treatment-plan acceptance, payment collection, procedure mix, direct
 margin, and revenue per allocated procedure chair hour. Patient
 retention remains a potential area for future analysis.
+
+## Management summary
+
+The main operational findings, limitations, and recommended management
+actions are documented in:
+
+```text
+docs/management_summary.md
+```
 
 ## Power BI report
 
@@ -141,6 +158,20 @@ The report contains three pages:
 The reporting-period slicer is synchronized across all three pages, and
 the Executive Overview is configured as the default landing page.
 
+## Report screenshots
+
+### Executive Overview
+
+![Executive Overview Power BI report](images/executive_overview.png)
+
+### Scheduling & Capacity
+
+![Scheduling and Capacity Power BI report](images/scheduling_capacity.png)
+
+### Treatment & Finance
+
+![Treatment and Finance Power BI report](images/treatment_finance.png)
+
 ## Technology stack
 
 - Python 3.12
@@ -162,9 +193,13 @@ the Executive Overview is configured as the default landing page.
 |   `-- processed/
 |-- docs/
 |   |-- data_dictionary.md
+|   |-- management_summary.md
 |   |-- processed_data_model.md
 |   `-- project_charter.md
 |-- images/
+|   |-- executive_overview.png
+|   |-- scheduling_capacity.png
+|   `-- treatment_finance.png
 |-- notebooks/
 |   `-- 01_eda.ipynb
 |-- powerbi/
@@ -307,9 +342,9 @@ The project validates several important relationships, including:
 - [x] Create the SQL Server schema
 - [x] Build the SQL Server data-loading workflow
 - [x] Implement the first core analytical queries
-- [ ] Expand the analytical SQL query library
+- [x] Expand the analytical SQL query library
 - [x] Complete exploratory data analysis with Python
 - [x] Create processed analytical datasets
 - [x] Build the Power BI data model
 - [x] Develop the first Power BI report
-- [ ] Document findings and management recommendations
+- [x] Document findings and management recommendations
