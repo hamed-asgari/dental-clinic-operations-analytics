@@ -115,6 +115,15 @@ treatment-plan acceptance, payment collection, procedure mix, direct
 margin, and revenue per allocated procedure chair hour. Patient
 retention remains a potential area for future analysis.
 
+## Management summary
+
+The main operational findings, limitations, and recommended management
+actions are documented in:
+
+```text
+docs/management_summary.md
+```
+
 ## Power BI report
 
 Open the Power BI project from:
@@ -317,4 +326,4 @@ The project validates several important relationships, including:
 - [x] Create processed analytical datasets
 - [x] Build the Power BI data model
 - [x] Develop the first Power BI report
-- [ ] Document findings and management recommendations
+- [x] Document findings and management recommendations
