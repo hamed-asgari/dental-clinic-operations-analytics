@@ -102,7 +102,12 @@ The current SQL queries examine:
 - No-show rate by reminder status
 - Monthly chair-time performance by dentist
 - Revenue and direct margin by procedure group
-- Treatment-plan acceptance by item count and proposed value
+- Treatment-plan acceptance by plan status
+- Appointment non-completion by weekday
+- No-show rate by booking lead-time band
+- Revenue efficiency by procedure group using allocated chair time
+- Treatment-plan acceptance by patient insurance type
+- Operational and financial performance by referral source
 
 The Power BI report extends this analysis with appointment trends,
 planned-versus-actual chair hours, weekday scheduling patterns,
@@ -307,7 +312,7 @@ The project validates several important relationships, including:
 - [x] Create the SQL Server schema
 - [x] Build the SQL Server data-loading workflow
 - [x] Implement the first core analytical queries
-- [ ] Expand the analytical SQL query library
+- [x] Expand the analytical SQL query library
 - [x] Complete exploratory data analysis with Python
 - [x] Create processed analytical datasets
 - [x] Build the Power BI data model
