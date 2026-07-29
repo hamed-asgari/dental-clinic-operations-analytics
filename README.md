@@ -6,10 +6,11 @@ The project uses only reproducible synthetic data and contains no real patient i
 
 ## Project status
 
-Version 0.6 - normalized source model, reproducible synthetic data,
+Version 1.0 - normalized source model, reproducible synthetic data,
 SQL Server workflow, exploratory analysis, validated processed datasets,
-a validated Power BI semantic model, and a three-page Power BI operations
-report completed.
+an expanded ten-query SQL analytics library, a validated Power BI semantic
+model, a three-page Power BI operations report, final report screenshots,
+and documented management findings and recommendations.
 
 ## Business problem
 
@@ -36,7 +37,7 @@ The repository currently supports:
 - SQL Server table and constraint creation
 - Transactional loading of CSV data into SQL Server
 - Row-count validation after database loading
-- Core operational and financial SQL queries
+- Ten documented operational and financial SQL analyses
 - Treatment-plan-to-procedure linkage
 - Payment-to-procedure allocation analysis
 - A reproducible processed-data build for Power BI
@@ -48,6 +49,8 @@ The repository currently supports:
 - Synchronized reporting-period slicers across all report pages
 - Procedure-level revenue efficiency using allocated procedure chair hours
 - Consistent KPI cards, trend analysis, weekday scheduling analysis, and procedure-group comparisons
+- Final screenshots for all three Power BI report pages
+- A management summary documenting findings, limitations, and recommended actions
 
 ## Data model
 
@@ -155,6 +158,20 @@ The report contains three pages:
 The reporting-period slicer is synchronized across all three pages, and
 the Executive Overview is configured as the default landing page.
 
+## Report screenshots
+
+### Executive Overview
+
+![Executive Overview Power BI report](images/executive_overview.png)
+
+### Scheduling & Capacity
+
+![Scheduling and Capacity Power BI report](images/scheduling_capacity.png)
+
+### Treatment & Finance
+
+![Treatment and Finance Power BI report](images/treatment_finance.png)
+
 ## Technology stack
 
 - Python 3.12
@@ -176,9 +193,13 @@ the Executive Overview is configured as the default landing page.
 |   `-- processed/
 |-- docs/
 |   |-- data_dictionary.md
+|   |-- management_summary.md
 |   |-- processed_data_model.md
 |   `-- project_charter.md
 |-- images/
+|   |-- executive_overview.png
+|   |-- scheduling_capacity.png
+|   `-- treatment_finance.png
 |-- notebooks/
 |   `-- 01_eda.ipynb
 |-- powerbi/
